@@ -1,5 +1,7 @@
 <?php
 
+use function PHPUnit\Framework\assertTrue;
+
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');
 
@@ -15,5 +17,9 @@ test('new users can register', function () {
     ]);
 
     $this->assertAuthenticated();
+
+    assertTrue(auth()->user()->organisations()->count() === 1);
+    assertTrue(auth()->user()->ownedOrganisations()->count() === 1);
+
     $response->assertRedirect(route('dashboard', absolute: false));
 });
