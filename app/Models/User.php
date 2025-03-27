@@ -6,6 +6,8 @@ namespace App\Models;
 
 use App\Enums\OrganisationRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -47,7 +49,12 @@ class User extends Authenticatable
         ];
     }
 
-    public function organisations()
+    public function ownedOrganisations(): HasMany
+    {
+        return $this->hasMany(Organisation::class, 'owner_id');
+    }
+
+    public function organisations(): BelongsToMany
     {
         return $this->belongsToMany(Organisation::class)
             ->withPivot('role')

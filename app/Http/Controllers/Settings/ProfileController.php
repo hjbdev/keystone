@@ -51,6 +51,14 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        if ($user->ownedOrganisations()->count()) {
+            return back()->withErrors(['password' => __('You must delete or transfer your organisations before you can delete your account.')]);
+        }
+
+        if ($user->organisations()->count()) {
+            return back()->withErrors(['password' => __('You must leave your organisations before you can delete your account.')]);
+        }
+
         Auth::logout();
 
         $user->delete();
