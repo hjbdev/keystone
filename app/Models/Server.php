@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ServerProvider;
+use App\Enums\ServerStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -14,6 +15,7 @@ class Server extends Model
     {
         return [
             'provider' => ServerProvider::class,
+            'status' => ServerStatus::class,
         ];
     }
 
