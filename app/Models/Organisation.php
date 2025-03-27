@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Organisation extends Model
 {
@@ -28,5 +29,15 @@ class Organisation extends Model
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class);
+    }
+
+    public static function createUniqueSlug(string $name): string
+    {
+        $slug = Str::slug($name);
+        $count = 2;
+        while (Organisation::where('slug', $slug)->exists()) {
+            $slug = Str::slug($name) . '-' . $count++;
+        }
+        return $slug;
     }
 }
