@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Organisation;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,6 +11,7 @@ return new class extends Migration
     {
         Schema::create('servers', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Organisation::class);
             $table->string('name');
             $table->string('provider');
             $table->string('provider_id');

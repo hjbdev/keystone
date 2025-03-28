@@ -30,9 +30,9 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'organisation' => $request->route('organisation') ? Organisation::with('applications')->findOrFail($request->route('organisation')) : null,
-            'application' => $request->route('application') ? Application::findOrFail($request->route('application')) : null,
+            'application' => $request->route('application') ? Application::with('environments')->findOrFail($request->route('application')) : null,
             'auth' => [
-                'user' => $request->user()->load('organisations'),
+                'user' => $request->user()?->load('organisations'),
             ],
             'ziggy' => [
                 ...(new Ziggy)->toArray(),

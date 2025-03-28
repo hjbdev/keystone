@@ -11,8 +11,9 @@ defineProps<{
     breadcrumbs?: BreadcrumbItemType[];
 }>();
 
-const organisation = usePage().props.organisation ?? { name: 'Select Organisation' };
-const application = usePage().props.application ?? { name: 'Select Application' };
+const organisation = usePage().props.organisation ?? null;
+const application = usePage().props.application ?? null;
+const environment = usePage().props.environment ?? null;
 </script>
 
 <template>
@@ -22,8 +23,8 @@ const application = usePage().props.application ?? { name: 'Select Application' 
         <div class="flex items-center gap-4">
             <SidebarTrigger class="-ml-1" />
             <div class="gap-0.25 flex items-center">
-                <Button :as="Link" :href="route('organisations.show', { organisation: organisation?.id })" variant="ghost" size="xs">
-                    {{ organisation?.name }}
+                <Button :as="organisation ? Link : 'button'" :href="organisation ? route('organisations.show', { organisation: organisation?.id }) : null" variant="ghost" size="xs">
+                    {{ organisation?.name ?? 'Select Organisation' }}
                 </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger :as="Button" size="iconxs" variant="ghost">
@@ -39,14 +40,14 @@ const application = usePage().props.application ?? { name: 'Select Application' 
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-            <div class="gap-0.25 flex items-center">
+            <div v-if="organisation" class="gap-0.25 flex items-center">
                 <Button
-                    :as="Link"
-                    :href="route('applications.show', { organisation: application.organisation_id, application: application.id })"
+                    :as="application ? Link : 'button'"
+                    :href="application ? route('applications.show', { organisation: application.organisation_id, application: application.id }) : null"
                     variant="ghost"
                     size="xs"
                 >
-                    {{ application?.name }}
+                    {{ application?.name ?? 'Select Application' }}
                 </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger :as="Button" size="iconxs" variant="ghost">
@@ -62,9 +63,32 @@ const application = usePage().props.application ?? { name: 'Select Application' 
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
+            <div v-if="application" class="gap-0.25 flex items-center">
+                <Button
+                    :as="environment ? Link : 'button'"
+                    :href="environment ? route('environments.show', { organisation: application.organisation_id, application: application.id, environment: environment.id  }) : null"
+                    variant="ghost"
+                    size="xs"
+                >
+                    {{ environment?.name ?? 'Select Environment' }}
+                </Button>
+                <DropdownMenu>
+                    <DropdownMenuTrigger :as="Button" size="iconxs" variant="ghost">
+                        <ChevronsUpDown class="size-3" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuItem
+                            v-for="env in application?.environments"
+                            :as="Link"
+                            :href="route('environments.show', { organisation: application.organisation_id, application: application.id, environment: env.id })"
+                            >{{ env.name }}</DropdownMenuItem
+                        >
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
             <template v-if="breadcrumbs.length > 0">
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />
-            </template>
+        </template>
         </div>
     </header>
 </template>

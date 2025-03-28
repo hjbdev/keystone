@@ -26,6 +26,11 @@ class Organisation extends Model
             ->withTimestamps();
     }
 
+    public function servers(): HasMany
+    {
+        return $this->hasMany(Server::class);
+    }
+
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class);
