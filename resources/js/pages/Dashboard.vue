@@ -18,12 +18,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div>The plan:</div>
-            <div>Organisations have projects</div>
-            <div>Projects have environments</div>
-            <div>Environments have servers</div>
+            <div>Organisations have applications</div>
+            <div>Applications have environments</div>
             <div>Servers have services</div>
-            <div>Servers can have services</div>
             <div>Services have slices, this could be a database table or a client in a websocket server</div>
+            <div>Environments have SLICES</div>
             <div>Also servers need to be provisioned</div>
             <div>Users have SSH keys</div>
             <div>Keystone has its own SSH keys</div>
