@@ -22,7 +22,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             <div>Applications have environments</div>
             <div>Servers have services</div>
             <div>Services have slices, this could be a database table or a client in a websocket server</div>
-            <div>Environments have SLICES</div>
+            <div>Environments have  SLICES</div>
             <div>Also servers need to be provisioned</div>
             <div>Users have SSH keys</div>
             <div>Keystone has its own SSH keys</div>
