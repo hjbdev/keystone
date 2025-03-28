@@ -18,8 +18,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [OrganisationController::class, 'show'])->name('organisations.show');
 
         Route::resource('servers', ServerController::class)
-            ->only('index', 'create', 'store')
+            ->only('index', 'show', 'create', 'store')
             ->name('index', 'servers.index')
+            ->name('show', 'servers.show')
             ->name('create', 'servers.create')
             ->name('store', 'servers.store');
         

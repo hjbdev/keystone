@@ -2,17 +2,19 @@
 
 namespace App\Services\ServerProviders;
 
+use App\Data\ServerProviders\CreatedServer;
 use App\Data\ServerProviders\Image;
 use App\Data\ServerProviders\Location;
 use App\Data\ServerProviders\ServerType;
 use App\Http\Integrations\Connectors\HetznerConnector;
-use App\Http\Integrations\Requests\Hetzner\Images\ListImagesRequest;
-use App\Http\Integrations\Requests\Hetzner\Locations\ListLocationsRequest;
-use App\Http\Integrations\Requests\Hetzner\ServerTypes\ListServerTypesRequest;
+use App\Http\Integrations\Requests\Hetzner\Images\GetImagesRequest;
+use App\Http\Integrations\Requests\Hetzner\Locations\GetLocationsRequest;
+use App\Http\Integrations\Requests\Hetzner\Servers\CreateServerRequest;
+use App\Http\Integrations\Requests\Hetzner\ServerTypes\GetServerTypesRequest;
 use Exception;
 use Illuminate\Support\Collection;
 
-class HetznerService implements ServerProviderService
+class HetznerService extends ServerProviderService
 {
     public function __construct()
     {
@@ -24,13 +26,33 @@ class HetznerService implements ServerProviderService
         string $serverType,
         string $location,
         string $image,
-    ): bool {
-        return false;
+        string $rootPassword,
+    ): CreatedServer {
+        $response = $this->connector->send(new CreateServerRequest(
+            image: $image,
+            name: $name,
+            serverType: $serverType,
+            location: $location,
+            rootPassword: $rootPassword,
+        ));
+
+        if ($response->status() !== 201) {
+            throw new Exception('Failed to create server on Hetzner');
+        }
+
+        return new CreatedServer(
+            id: $response->json('server.id'),
+            name: $name,
+            rootPassword: $rootPassword,
+            status: $response->json('server.status')['status'],
+            ipv4: $response->json('server.public_net.ipv4.ip'),
+            ipv6: $response->json('server.public_net.ipv6.ip'),
+        );
     }
 
-    public function listServerTypes(): Collection
+    public function getServerTypes(): Collection
     {
-        $response = $this->connector->send(new ListServerTypesRequest);
+        $response = $this->connector->send(new GetServerTypesRequest);
 
         if ($response->status() !== 200) {
             throw new Exception('Failed to fetch server types from Hetzner');
@@ -41,17 +63,17 @@ class HetznerService implements ServerProviderService
                 id: $serverType['id'],
                 name: $serverType['name'],
                 cores: $serverType['cores'],
-                memory: $serverType['memory'] * 1024,
+                memory: $serverType['memory'],
                 disk: $serverType['disk'],
                 priceMonthly: $serverType['prices'][0]['monthly']['gross'] ?? 0,
                 priceHourly: $serverType['prices'][0]['hourly']['gross'] ?? 0,
             );
-        });
+        })->values();
     }
 
-    public function listLocations(): Collection
+    public function getLocations(): Collection
     {
-        $response = $this->connector->send(new ListLocationsRequest);
+        $response = $this->connector->send(new GetLocationsRequest);
 
         if ($response->status() !== 200) {
             throw new Exception('Failed to fetch locations from Hetzner');
@@ -64,12 +86,12 @@ class HetznerService implements ServerProviderService
                 country: $location['country'],
                 city: $location['city'],
             );
-        });
+        })->values();
     }
 
-    public function listImages(): Collection
+    public function getImages(): Collection
     {
-        $response = $this->connector->send(new ListImagesRequest(
+        $response = $this->connector->send(new GetImagesRequest(
             architecture: 'x86',
         ));
 
@@ -84,6 +106,6 @@ class HetznerService implements ServerProviderService
                 osFlavor: $image['os_flavor'],
                 osVersion: $image['os_version'],
             );
-        });
+        })->values();
     }
 }

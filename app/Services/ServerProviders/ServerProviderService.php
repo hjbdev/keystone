@@ -2,23 +2,25 @@
 
 namespace App\Services\ServerProviders;
 
+use App\Data\ServerProviders\CreatedServer;
 use Illuminate\Support\Collection;
 use Saloon\Http\Connector;
 
-interface ServerProviderService
+abstract class ServerProviderService
 {
     protected Connector $connector;
 
-    public function createServer(
+    abstract public function createServer(
         string $name,
         string $serverType,
         string $location,
         string $image,
-    ): bool;
+        string $rootPassword,
+    ): CreatedServer;
 
-    public function listServerTypes(): Collection;
+    abstract public function getServerTypes(): Collection;
 
-    public function listLocations(): Collection;
+    abstract public function getLocations(): Collection;
 
-    public function listImages(): Collection;
+    abstract public function getImages(): Collection;
 }
