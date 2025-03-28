@@ -1,4 +1,6 @@
 #!/bin/bash
+# [!server!]
+# [!sudo_password!]
 
 apt_wait() {
     while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do
@@ -48,6 +50,10 @@ if [ ! -d /root/.ssh ]; then
     mkdir -p /root/.ssh
     touch /root/.ssh/authorized_keys
 fi
+
+# Set The Hostname If Necessary
+echo "[!server!]" > /etc/hostname sed -i 's/127\.0\.0\.1.*localhost/127.0.0.1 [!server!].localdomain [!server!] localhost/' /etc/hosts
+hostname [!server!]
 
 # Setup Keystone User
 useradd keystone
@@ -118,4 +124,4 @@ EOF
 
 
 # Callback that the server is installed
-curl --insecure --data "event_id=878&server_id=390&sudo_password=[!sudo_password!]&db_password=[!db_password!]&recipe_id=" https://keystone.test/provisioning/callback/app
+curl --insecure --data "event_id=878&server_id=390&sudo_password=[!sudo_password!]&recipe_id=" https://keystone.test/provisioning/callback/app
