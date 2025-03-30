@@ -44,7 +44,7 @@ class HetznerService extends ServerProviderService
             id: $response->json('server.id'),
             name: $name,
             rootPassword: $rootPassword,
-            status: $response->json('server.status')['status'],
+            status: $response->json('server.status'),
             ipv4: $response->json('server.public_net.ipv4.ip'),
             ipv6: $response->json('server.public_net.ipv6.ip'),
         );
