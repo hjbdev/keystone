@@ -26,14 +26,12 @@ class HetznerService extends ServerProviderService
         string $serverType,
         string $location,
         string $image,
-        string $rootPassword,
     ): CreatedServer {
         $response = $this->connector->send(new CreateServerRequest(
             image: $image,
             name: $name,
             serverType: $serverType,
             location: $location,
-            rootPassword: $rootPassword,
         ));
 
         if ($response->status() !== 201) {
@@ -43,7 +41,7 @@ class HetznerService extends ServerProviderService
         return new CreatedServer(
             id: $response->json('server.id'),
             name: $name,
-            rootPassword: $rootPassword,
+            rootPassword: $response->json('root_password'),
             status: $response->json('server.status'),
             ipv4: $response->json('server.public_net.ipv4.ip'),
             ipv6: $response->json('server.public_net.ipv6.ip'),

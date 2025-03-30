@@ -18,7 +18,6 @@ class CreateServerRequest extends Request implements HasBody
         protected ?string $name = null,
         protected ?string $serverType = null,
         protected ?string $location = null,
-        protected ?string $rootPassword = null,
     ) {}
 
     protected function defaultBody(): array
@@ -28,7 +27,6 @@ class CreateServerRequest extends Request implements HasBody
             'name' => $this->name,
             'server_type' => $this->serverType,
             'location' => $this->location,
-            'root_password' => $this->rootPassword,
         ];
     }
 

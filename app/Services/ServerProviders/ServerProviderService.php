@@ -15,7 +15,6 @@ abstract class ServerProviderService
         string $serverType,
         string $location,
         string $image,
-        string $rootPassword,
     ): CreatedServer;
 
     abstract public function getServerTypes(): Collection;

@@ -56,7 +56,6 @@ class ServerController extends Controller
 
     public function store(Request $request)
     {
-        $rootPassword = Str::random(32);
         $sudoPassword = Str::random(32);
         $providerService = app(GetProviderService::class)->execute($request->provider);
 
@@ -69,7 +68,6 @@ class ServerController extends Controller
             serverType: $request->server_type,
             location: $request->location,
             image: $request->image,
-            rootPassword: $rootPassword,
         );
 
         $organisation = Organisation::findOrFail($request->route('organisation'));
@@ -90,7 +88,7 @@ class ServerController extends Controller
 
         dispatch(new WaitForServerToConnect(
             server: $server,
-            rootPassword: $rootPassword,
+            rootPassword: $createdServer->rootPassword,
             sudoPassword: $sudoPassword,
         ))->delay(now()->addSeconds(30));
 
