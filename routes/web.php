@@ -67,7 +67,9 @@ Route::post('/provision-callback', function (Request $request) {
 
     $server = Server::find($validated['server_id']);
 
-    if (! in_array($request->ip(), [$server->ipv4, $server->ipv6])) {
+    
+
+    if ($request->ip() !== $server->ipv4 && inet_pton($request->ip()) !== inet_pton($server->ipv6)) {
         logger('someone tried to callback from an invalid IP');
         logger(' server ip: ' . $server->ipv4);
         logger(' server ipv6: ' . $server->ipv6);
