@@ -37,8 +37,7 @@ class ProvisionServer implements ShouldQueue, ShouldBeEncrypted
         // Download the provision script and execute it
         // The script will run in the background
         $result = $ssh->execute([
-            'set -x',
-            'wget --output-document=provision.sh "' . $provisionScriptUrl . '"',
+            'wget --quiet --output-document=provision.sh "' . $provisionScriptUrl . '"',
             'chmod +x provision.sh',
             './provision.sh &',
         ]);
