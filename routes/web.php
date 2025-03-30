@@ -1,9 +1,11 @@
 <?php
 
+use App\Enums\ServerStatus;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\EnvironmentController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\ServerController;
+use App\Models\Server;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -52,10 +54,33 @@ Route::get('/provision-script', function (Request $request) {
     $script = str_replace('[!sudo_password!]', $validated['sudo_password'], $script);
     $script = str_replace('[!server_id!]', $validated['server_id'], $script);
     $script = str_replace('[!keystonepublickey!]', $keystonePublicKey, $script);
+    $script = str_replace('[!callback!]', route('provision.callback'), $script);
 
     return response($script)
         ->header('Content-Type', 'text/plain');
 })->name('provision-script');
+
+Route::get('/provision-callback', function (Request $request) {
+    $validated = $request->validate([
+        'server_id' => ['required', 'integer', 'exists:servers,id'],
+        'sudo_password' => ['required', 'string'],
+    ]);
+
+    $server = Server::find($validated['server_id']);
+
+    if (! in_array($request->ip(), [$server->ipv4, $server->ipv6])) {
+        logger('someone tried to callback from an invalid IP');
+        logger(' server ip: ' . $server->ipv4);
+        logger(' server ipv6: ' . $server->ipv6);
+        logger(' callback ip: ' . $request->ip());
+        logger(' server id: ' . $server->id);
+        return response('Unauthorized', 401);
+    }
+
+    $server->update([
+        'status' => ServerStatus::ACTIVE,
+    ]);
+})->name('provision.callback');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

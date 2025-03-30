@@ -3,6 +3,7 @@
 # [!sudo_password!] - the sudo password to set
 # [!server_id!] - the servers id
 # [!keystonepublickey!] - keystone's public key
+# [!callback!] - callback url
 
 apt_wait() {
     while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do
@@ -126,4 +127,4 @@ EOF
 
 
 # Callback that the server is installed
-curl --insecure --data "server_id=[!server_id!]&sudo_password=[!sudo_password!] https://keystone.test/provisioning/callback/app
+curl --insecure --data "server_id=[!server_id!] [!callback!]
