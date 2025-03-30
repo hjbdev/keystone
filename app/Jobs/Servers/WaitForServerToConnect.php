@@ -13,6 +13,9 @@ class WaitForServerToConnect implements ShouldQueue, ShouldBeEncrypted
 {
     use Queueable;
 
+    public int $retryAfter = 15;
+    public int $tries = 40;
+
     public function __construct(
         protected Server $server,
         protected string $rootPassword,
