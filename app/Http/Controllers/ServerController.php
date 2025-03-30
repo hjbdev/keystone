@@ -90,7 +90,7 @@ class ServerController extends Controller
             server: $server,
             rootPassword: $createdServer->rootPassword,
             sudoPassword: $sudoPassword,
-        ))->delay(now()->addSeconds(30));
+        ))->delay(now()->addSeconds(5));
 
         session()->flash('sudo_password', $sudoPassword);
 
