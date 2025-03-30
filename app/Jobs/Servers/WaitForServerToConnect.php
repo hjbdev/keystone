@@ -20,27 +20,28 @@ class WaitForServerToConnect implements ShouldQueue, ShouldBeEncrypted
         protected Server $server,
         protected string $rootPassword,
         protected string $sudoPassword,
-    )
-    {
+    ) {
         //
     }
 
     public function handle(): void
     {
-        try {
-            Ssh::create('root', $this->server->ipv4 ?? $this->server->ipv6)
-                ->usePassword($this->rootPassword)
-                ->setTimeout(10)
-                ->execute('echo "Connected"');
+        $process = Ssh::create('root', $this->server->ipv4 ?? $this->server->ipv6)
+            ->usePassword($this->rootPassword)
+            ->setTimeout(10)
+            ->execute('echo "Connected"');
 
-            $this->server->update([
-                'status' => ServerStatus::UNPROVISIONED,
-            ]);
-
-            dispatch(new ProvisionServer($this->server, $this->rootPassword, $this->sudoPassword));
-        } catch (\Throwable $e) {
-            return;
+        if (! $process->isSuccessful()) {
+            logger('server not reachable');
+            logger($process->getErrorOutput());
+            throw new \Exception('Server is not reachable');
         }
+
+        $this->server->update([
+            'status' => ServerStatus::UNPROVISIONED,
+        ]);
+
+        dispatch(new ProvisionServer($this->server, $this->rootPassword, $this->sudoPassword));
     }
 
     public function failed(\Throwable $exception): void
