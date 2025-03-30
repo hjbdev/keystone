@@ -34,7 +34,8 @@ class WaitForServerToConnect implements ShouldQueue, ShouldBeEncrypted
         if (! $process->isSuccessful()) {
             logger('server not reachable');
             logger($process->getErrorOutput());
-            throw new \Exception('Server is not reachable');
+            $this->release(15);
+            return;
         }
 
         $this->server->update([

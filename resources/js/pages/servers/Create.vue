@@ -77,7 +77,7 @@ if (form.provider && !props.locations) {
             </div>
             <div v-if="form.location" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
                 <RadioButton
-                    v-for="serverType in serverTypes.sort((a, b) => a.cores - b.cores)"
+                    v-for="serverType in serverTypes?.sort((a, b) => a.cores - b.cores) ?? []"
                     v-model="form.server_type"
                     :value="serverType.id"
                     :disabled="serverType.disabled"
