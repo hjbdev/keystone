@@ -7,6 +7,7 @@ use App\Models\Server;
 use Illuminate\Contracts\Queue\ShouldBeEncrypted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Str;
 use Spatie\Ssh\Ssh;
 
 class WaitForServerToConnect implements ShouldQueue, ShouldBeEncrypted
@@ -33,6 +34,16 @@ class WaitForServerToConnect implements ShouldQueue, ShouldBeEncrypted
             ->execute('echo "Connected"');
 
         if (! $process->isSuccessful()) {
+            if (str_contains($process->getErrorOutput(), 'Password change required')) {
+                $newRootPassword = Str::random(24);
+                Ssh::create('root', $this->server->ipv4 ?? $this->server->ipv6)
+                    ->usePassword($this->rootPassword)
+                    ->execute('echo "root:'.$newRootPassword.'" | chpasswd');
+
+                $this->rootPassword = $newRootPassword;
+                $this->release(15);
+                return;
+            }
             logger('root pw: ' . $this->rootPassword);
             logger('server not reachable');
             logger('exit code' . $process->getExitCode());
