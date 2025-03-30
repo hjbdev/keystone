@@ -63,7 +63,6 @@ Route::get('/provision-script', function (Request $request) {
 Route::get('/provision-callback', function (Request $request) {
     $validated = $request->validate([
         'server_id' => ['required', 'integer', 'exists:servers,id'],
-        'sudo_password' => ['required', 'string'],
     ]);
 
     $server = Server::find($validated['server_id']);
