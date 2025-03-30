@@ -36,6 +36,8 @@ class ProvisionServer implements ShouldQueue, ShouldBeEncrypted
         // Download the provision script and execute it
         // The script will run in the background
         $ssh->execute("cd ~ && wget --quiet --output-document=provision.sh \"{$provisionScriptUrl}\" && chmod +x provision.sh && ./provision.sh &");
+        logger('executing script on server');
+        logger("cd ~ && wget --quiet --output-document=provision.sh \"{$provisionScriptUrl}\" && chmod +x provision.sh && ./provision.sh &");
 
         $this->server->update([
             'status' => ServerStatus::PROVISIONING,
