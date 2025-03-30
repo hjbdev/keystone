@@ -8,6 +8,7 @@ use App\Models\Organisation;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $user = User::factory()->create([
             'name' => 'Harry',
             'email' => 'harry@hjb.dev',
+            'password' => env('DEFAULT_PASSWORD') ?: Hash::make('password'),
         ]);
 
         $organisation = Organisation::create([
