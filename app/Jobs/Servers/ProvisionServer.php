@@ -26,7 +26,7 @@ class ProvisionServer implements ShouldQueue, ShouldBeEncrypted
         $ssh = Ssh::create('root', $this->server->ipv4 ?? $this->server->ipv6)
             ->disableStrictHostKeyChecking()
             ->usePassword($this->rootPassword)
-            ->setTimeout(10);
+            ->setTimeout(30);
 
         $provisionScriptUrl = route('provision-script', [
             'sudo_password' => $this->sudoPassword,
