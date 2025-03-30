@@ -33,6 +33,7 @@ class WaitForServerToConnect implements ShouldQueue, ShouldBeEncrypted
             ->execute('echo "Connected"');
 
         if (! $process->isSuccessful()) {
+            logger('root pw: ' . $this->rootPassword);
             logger('server not reachable');
             logger('exit code' . $process->getExitCode());
             logger('output');
