@@ -60,7 +60,7 @@ Route::get('/provision-script', function (Request $request) {
         ->header('Content-Type', 'text/plain');
 })->name('provision-script');
 
-Route::get('/provision-callback', function (Request $request) {
+Route::post('/provision-callback', function (Request $request) {
     $validated = $request->validate([
         'server_id' => ['required', 'integer', 'exists:servers,id'],
     ]);

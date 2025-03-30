@@ -127,4 +127,4 @@ EOF
 
 
 # Callback that the server is installed
-curl --insecure --data "server_id=[!server_id!] [!callback!]
+curl --insecure --data "server_id=[!server_id!]" [!callback!]
