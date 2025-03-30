@@ -14,7 +14,7 @@ const props = defineProps({
 const form = useForm({
     provider: 'hetzner',
     location: null,
-    serverType: null,
+    server_type: null,
     image: null,
 });
 
@@ -78,13 +78,24 @@ if (form.provider && !props.locations) {
             <div v-if="form.location" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
                 <RadioButton
                     v-for="serverType in serverTypes.sort((a, b) => a.cores - b.cores)"
-                    v-model="form.serverType"
+                    v-model="form.server_type"
                     :value="serverType.id"
                     :disabled="serverType.disabled"
                     name="server-type"
                 >
                     <h5 class="text-lg font-semibold uppercase tracking-tight">{{ serverType.name }}</h5>
                     <p class="text-sm opacity-60">{{ serverType.cores }} cores &bull; {{ serverType.memory }} GB RAM &bull; {{ serverType.disk }} GB disk</p>
+                </RadioButton>
+            </div>
+            <div v-if="form.server_type" class="flex gap-2 flex-wrap">
+                <RadioButton
+                    v-for="image in images"
+                    v-model="form.image"
+                    :value="image.id"
+                    :disabled="image.disabled"
+                    name="image"
+                >
+                    <h5 class="text-lg font-semibold tracking-tight">{{ image.name }}</h5>
                 </RadioButton>
             </div>
             <div class="flex justify-end items-center">
