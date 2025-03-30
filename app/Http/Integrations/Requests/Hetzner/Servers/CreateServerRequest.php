@@ -27,6 +27,7 @@ class CreateServerRequest extends Request implements HasBody
             'name' => $this->name,
             'server_type' => $this->serverType,
             'location' => $this->location,
+            'user_data' => file_get_contents(resource_path('scripts/hetzner-cloudinit.yml')),
         ];
     }
 
