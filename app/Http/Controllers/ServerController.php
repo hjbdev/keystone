@@ -6,6 +6,7 @@ use App\Actions\GenerateRandomSlug;
 use App\Actions\GetProviderService;
 use App\Enums\ServerProvider;
 use App\Enums\ServerStatus;
+use App\Jobs\Servers\WaitForServerToConnect;
 use App\Models\Organisation;
 use App\Services\ServerProviders\HetznerService;
 use Illuminate\Http\Request;
@@ -56,6 +57,7 @@ class ServerController extends Controller
     public function store(Request $request)
     {
         $rootPassword = Str::random(32);
+        $sudoPassword = Str::random(32);
         $providerService = app(GetProviderService::class)->execute($request->provider);
 
         if (!$providerService) {
@@ -79,12 +81,18 @@ class ServerController extends Controller
             'ipv4' => $createdServer->ipv4,
             'ipv6' => $createdServer->ipv6,
             'provider_status' => $createdServer->status,
-            'status' => ServerStatus::PENDING,
+            'status' => ServerStatus::WAITING_FOR_PROVIDER,
             'region' => $request->location,
             'os' => $request->image,
             'plan' => $request->server_type,
             'user' => '',
         ]);
+
+        dispatch(new WaitForServerToConnect(
+            server: $server,
+            rootPassword: $rootPassword,
+            sudoPassword: $sudoPassword,
+        ))->delay(now()->addSeconds(30));
 
         return redirect()->route('servers.show', ['organisation' => $organisation->id, 'server' => $server->id]);
     }
