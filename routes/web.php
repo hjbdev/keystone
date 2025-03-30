@@ -46,9 +46,12 @@ Route::get('/provision-script', function (Request $request) {
 
     $script = file_get_contents(base_path('provision.sh'));
 
+    $keystonePublicKey = file_get_contents(storage_path('app/private/ssh/id_ed25519.pub'));
+
     $script = str_replace('[!hostname!]', $validated['hostname'], $script);
     $script = str_replace('[!sudo_password!]', $validated['sudo_password'], $script);
     $script = str_replace('[!server_id!]', $validated['server_id'], $script);
+    $script = str_replace('[!keystonepublickey!]', $keystonePublicKey, $script);
 
     return response($script)
         ->header('Content-Type', 'text/plain');

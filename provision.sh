@@ -2,6 +2,7 @@
 # [!hostname!] - server hostname
 # [!sudo_password!] - the sudo password to set
 # [!server_id!] - the servers id
+# [!keystonepublickey!] - keystone's public key
 
 apt_wait() {
     while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do
@@ -74,7 +75,7 @@ usermod --password $PASSWORD keystone
 # Build Formatted Keys & Copy Keys To Keystone
 cat >/root/.ssh/authorized_keys <<EOF
 # Keystone
-@TODO INJECT KEY HERE
+[!keystonepublickey!]
 EOF
 
 cp /root/.ssh/authorized_keys /home/keystone/.ssh/authorized_keys

@@ -31,6 +31,11 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'organisation' => $request->route('organisation') ? Organisation::with('applications')->findOrFail($request->route('organisation')) : null,
             'application' => $request->route('application') ? Application::with('environments')->findOrFail($request->route('application')) : null,
+            'flash' => [
+                'server_credentials' => $request->session()->has('sudo_password') ? [
+                    'sudo_password' => $request->session()->get('sudo_password'),
+                ] : null,
+            ],
             'auth' => [
                 'user' => $request->user()?->load('organisations'),
             ],

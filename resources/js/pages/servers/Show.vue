@@ -18,6 +18,13 @@ const props = defineProps({
     <AppLayout>
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             {{ server }}
+
+            <div v-if="$page.props.flash?.server_credentials" class="p-5">
+                <div class="mb-4 text-sm font-medium text-gray-900 dark:text-white">
+                    WILL NOT BE SHOWN AGAIN: 
+                    {{ $page.props.flash.server_credentials }}
+                </div>
+            </div>
         </div>
     </AppLayout>
 </template>
