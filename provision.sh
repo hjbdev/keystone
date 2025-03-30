@@ -42,9 +42,6 @@ echo "" | sudo tee -a /etc/ssh/sshd_config
 echo "" | sudo tee -a /etc/ssh/sshd_config
 echo "PasswordAuthentication no" | sudo tee -a /etc/ssh/sshd_config
 
-# Restart SSH
-ssh-keygen -A service ssh restart
-
 # UTC
 ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 
@@ -83,6 +80,9 @@ cp /root/.ssh/authorized_keys /home/keystone/.ssh/authorized_keys
 
 # Create The Server SSH Key
 ssh-keygen -f /home/keystone/.ssh/id_ed25519 -t ed25519 -N ''
+
+# Restart SSH
+service ssh restart
 
 # Setup Keystone Home Directory Permissions
 chown -R keystone:keystone /home/keystone
