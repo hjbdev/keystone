@@ -1,9 +1,9 @@
 #!/bin/bash
-# [!hostname!] - server hostname
-# [!sudo_password!] - the sudo password to set
-# [!server_id!] - the servers id
-# [!keystonepublickey!] - keystone's public key
-# [!callback!] - callback url
+# [hostname!] - server hostname
+# [sudo_password!] - the sudo password to set
+# [server_id!] - the servers id
+# [keystonepublickey!] - keystone's public key
+# [callback!] - callback url
 
 apt_wait() {
     while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do
