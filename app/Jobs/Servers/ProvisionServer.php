@@ -29,15 +29,15 @@ class ProvisionServer implements ShouldQueue, ShouldBeEncrypted
 
         $provisionScriptUrl = route('provision-script', [
             'sudo_password' => $this->sudoPassword,
-            'hostname' => $this->server->hostname,
+            'hostname' => str($this->server->name)->slug()->toString(),
             'server_id' => $this->server->id,
         ]);
 
         // Download the provision script and execute it
         // The script will run in the background
-        $ssh->execute("cd ~ && wget --quiet --output-document=provision.sh \"{$provisionScriptUrl}\" && chmod +x provision.sh && ./provision.sh &");
+        $ssh->execute("wget --quiet --output-document=provision.sh \"{$provisionScriptUrl}\" && chmod +x provision.sh && ./provision.sh &");
         logger('executing script on server');
-        logger("cd ~ && wget --quiet --output-document=provision.sh \"{$provisionScriptUrl}\" && chmod +x provision.sh && ./provision.sh &");
+        logger("wget --quiet --output-document=provision.sh \"{$provisionScriptUrl}\" && chmod +x provision.sh && ./provision.sh &");
 
         $this->server->update([
             'status' => ServerStatus::PROVISIONING,
