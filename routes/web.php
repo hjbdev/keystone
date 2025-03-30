@@ -80,6 +80,8 @@ Route::get('/provision-callback', function (Request $request) {
     $server->update([
         'status' => ServerStatus::ACTIVE,
     ]);
+
+    return response('OK', 200);
 })->name('provision.callback');
 
 require __DIR__ . '/settings.php';
