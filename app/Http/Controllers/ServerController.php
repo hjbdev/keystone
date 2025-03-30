@@ -94,9 +94,7 @@ class ServerController extends Controller
             sudoPassword: $sudoPassword,
         ))->delay(now()->addSeconds(30));
 
-        session()->flash('server-credentials', [
-            'sudo_password' => $sudoPassword,
-        ]);
+        session()->flash('sudo_password', $sudoPassword);
 
         return redirect()->route('servers.show', ['organisation' => $organisation->id, 'server' => $server->id]);
     }
