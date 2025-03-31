@@ -37,7 +37,17 @@ class RunStep implements ShouldQueue
                 ]);
             });
 
-        $ssh->execute($this->step->script);
+        $result = $ssh->execute($this->step->script);
+
+        if (! $result->isSuccessful()) {
+            $this->step->update([
+                'status' => DeploymentStatus::FAILED,
+                'finished_at' => now(),
+                'logs' => $this->step->logs . "\n" . trim($result->getErrorOutput()),
+            ]);
+
+            return;
+        }
 
         $this->step->update([
             'status' => DeploymentStatus::COMPLETED,
