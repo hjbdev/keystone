@@ -2,12 +2,12 @@
 
 namespace App\Drivers;
 
-interface DatabaseDriver extends Driver
+abstract class DatabaseDriver implements Driver
 {
     public string $defaultUser = 'keystone';
     public string $defaultDb = 'keystone';
 
-    public function __construct(
+    abstract public function __construct(
         public ?string $containerName = null,
         public ?string $containerId = null,
         public ?string $defaultPassword = null,

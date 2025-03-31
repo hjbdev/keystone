@@ -6,7 +6,7 @@ use App\Data\Deployments\Plan;
 use App\Data\Deployments\PlannedStep as Step;
 use App\Drivers\DatabaseDriver;
 
-class Postgres17Driver implements DatabaseDriver
+class Postgres17Driver extends DatabaseDriver
 {
     public Plan $deploymentPlan;
     public string $defaultUser = 'keystone';
