@@ -92,13 +92,6 @@ class ServerController extends Controller
             sudoPassword: $sudoPassword,
         ))->delay(now()->addSeconds(5));
 
-        logger('server created');
-        logger($createdServer->id);
-        logger($createdServer->ipv4);
-        logger($createdServer->ipv6);
-        logger($createdServer->rootPassword);
-        logger($sudoPassword);
-
         session()->flash('sudo_password', $sudoPassword);
 
         return redirect()->route('servers.show', ['organisation' => $organisation->id, 'server' => $server->id]);

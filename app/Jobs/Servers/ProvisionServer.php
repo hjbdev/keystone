@@ -43,20 +43,11 @@ class ProvisionServer implements ShouldQueue, ShouldBeEncrypted
         ]);
         logger('executing script on server');
         if (! $result->isSuccessful()) {
-            logger('failed to execute script on server');
-            logger($result->getOutput());
-            logger($result->getErrorOutput());
-            logger($result->getExitCode());
             $this->server->update([
                 'status' => ServerStatus::PROVISIONING_FAILED,
             ]);
             return;
         }
-
-        logger('script executed on server');
-        logger($result->getOutput());
-        logger($result->getErrorOutput());
-        logger($result->getExitCode());
 
         $this->server->update([
             'status' => ServerStatus::PROVISIONING,
