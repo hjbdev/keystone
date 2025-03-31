@@ -21,13 +21,13 @@ class RunStep implements ShouldQueue
 
     public function handle(): void
     {
-        $this->step->load('service.server');
+        $this->step->load('deployment.target.server');
         $this->step->update([
             'status' => DeploymentStatus::IN_PROGRESS,
             'started_at' => now(),
         ]);
 
-        $server = $this->step->service->server;
+        $server = $this->step->deployment->target->server;
 
         $ssh = Ssh::create('root', $server->ipv4)
             ->usePrivateKey(storage_path('private/ssh/id_ed25519'))

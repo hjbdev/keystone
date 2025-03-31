@@ -23,7 +23,7 @@ class Deployment extends Model
         return $this->hasMany(Step::class);
     }
 
-    public function deployable(): MorphTo
+    public function target(): MorphTo
     {
         return $this->morphTo('target');
     }
