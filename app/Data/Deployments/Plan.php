@@ -5,7 +5,7 @@ namespace App\Data\Deployments;
 class Plan
 {
     /**
-     * @param Step[] $steps
+     * @param PlannedStep[] $steps
      */
     public function __construct(
         public array $steps = [],

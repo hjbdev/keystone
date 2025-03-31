@@ -9,6 +9,7 @@ use App\Enums\ServiceType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Service extends Model
 {
@@ -31,6 +32,11 @@ class Service extends Model
     public function slices(): HasMany
     {
         return $this->hasMany(Slice::class);
+    }
+
+    public function deployments(): MorphMany
+    {
+        return $this->morphMany(Deployment::class, 'deployable');
     }
 
     public function driver()//: Driver

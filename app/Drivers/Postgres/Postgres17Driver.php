@@ -3,7 +3,7 @@
 namespace App\Drivers\Postgres;
 
 use App\Data\Deployments\Plan;
-use App\Data\Deployments\Step;
+use App\Data\Deployments\PlannedStep as Step;
 use App\Drivers\DatabaseDriver;
 
 class Postgres17Driver implements DatabaseDriver
@@ -25,6 +25,9 @@ class Postgres17Driver implements DatabaseDriver
             ),
             new Step(
                 name: 'Run the docker image',
+                secrets: [
+                    'defaultpassword' => $this->defaultPassword,
+                ],
                 script: function () {
                     $script = collect();
                     if ($this->containerName) {
@@ -38,7 +41,7 @@ class Postgres17Driver implements DatabaseDriver
                         $runCommand .= " --name {$this->containerName}";
                     }
                     if ($this->defaultPassword) {
-                        $runCommand .= " -e POSTGRES_PASSWORD={$this->defaultPassword}";
+                        $runCommand .= " -e POSTGRES_PASSWORD=[!defaultpassword!]";
                     }
                     if ($this->defaultUser) {
                         $runCommand .= " -e POSTGRES_USER={$this->defaultUser}";
@@ -48,6 +51,8 @@ class Postgres17Driver implements DatabaseDriver
                     }
 
                     $runCommand .= " -p 5432:5432 postgres:17";
+
+                    return $runCommand;
                 }
             )
         ]);
