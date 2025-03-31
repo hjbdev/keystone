@@ -5,7 +5,7 @@ namespace App\Actions\Services;
 use App\Enums\ServiceCategory;
 use App\Enums\ServiceStatus;
 use App\Enums\ServiceType;
-use App\Jobs\Services\InstallService;
+use App\Jobs\Services\DeployService;
 use App\Models\Server;
 use Illuminate\Support\Str;
 
@@ -27,5 +27,9 @@ class CreateService
             'driver_name' => $driverName, // postgres
             'status' => ServiceStatus::NOT_INSTALLED,
         ]);
+
+        $defaultPassword = Str::random(16);
+
+        dispatch(new DeployService($service, $defaultPassword));
     }
 }

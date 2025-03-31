@@ -41,7 +41,7 @@ class Postgres17Driver implements DatabaseDriver
                         $runCommand .= " --name {$this->containerName}";
                     }
                     if ($this->defaultPassword) {
-                        $runCommand .= " -e POSTGRES_PASSWORD=[!defaultpassword!]";
+                        $runCommand .= " -e POSTGRES_PASSWORD=[!defaultPassword!]";
                     }
                     if ($this->defaultUser) {
                         $runCommand .= " -e POSTGRES_USER={$this->defaultUser}";

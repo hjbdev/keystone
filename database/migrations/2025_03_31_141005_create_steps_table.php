@@ -12,8 +12,13 @@ return new class extends Migration
         Schema::create('steps', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Deployment::class);
+            $table->integer('order');
+            $table->string('status');
             $table->longText('script');
             $table->longText('logs')->nullable();
+            $table->text('secrets')->nullable();
+            $table->dateTime('started_at')->nullable();
+            $table->dateTime('finished_at')->nullable();
             $table->timestamps();
         });
     }

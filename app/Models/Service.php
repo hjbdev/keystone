@@ -36,11 +36,17 @@ class Service extends Model
 
     public function deployments(): MorphMany
     {
-        return $this->morphMany(Deployment::class, 'deployable');
+        return $this->morphMany(Deployment::class, 'target');
     }
 
-    public function driver()//: Driver
+    public function driver(
+        ?string $defaultPassword = null,
+    ): Driver
     {
-        // @todo. This is the class that controls the service
+        $class = config("keystone.drivers.{$this->driver_name}.{$this->version}");
+        if (!class_exists($class)) {
+            throw new \Exception("Driver class {$class} not found");
+        }
+        return new $class($this->container_name, $this->container_id, defaultPassword: $defaultPassword);
     }
 }
