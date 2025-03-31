@@ -50,6 +50,10 @@ class Postgres17Driver extends DatabaseDriver
 
                     return $runCommand;
                 }
+            ),
+            new Step(
+                name: 'Configure firewall',
+                script: 'ufw allow 5432/tcp || true',
             )
         ]);
     }
