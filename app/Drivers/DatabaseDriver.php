@@ -6,10 +6,13 @@ abstract class DatabaseDriver implements Driver
 {
     public string $defaultUser = 'keystone';
     public string $defaultDb = 'keystone';
+    public ?string $containerName;
+    public ?string $containerId;
+    public ?string $defaultPassword;
 
     abstract public function __construct(
-        public ?string $containerName = null,
-        public ?string $containerId = null,
-        public ?string $defaultPassword = null,
+        ?string $containerName = null,
+        ?string $containerId = null,
+        ?string $defaultPassword = null,
     );
 }
