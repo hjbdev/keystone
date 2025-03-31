@@ -26,6 +26,9 @@ class DeployService implements ShouldQueue
     public function handle(): void
     {
         $driver = $this->service->driver($this->defaultPassword);
+        $this->service->update([
+            'status' => ServiceStatus::INSTALLING
+        ]);
         $this->deployment = $this->service->deployments()->create([
             'status' => DeploymentStatus::PENDING,
         ]);

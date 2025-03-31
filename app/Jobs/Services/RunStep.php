@@ -70,4 +70,21 @@ class RunStep implements ShouldQueue
             ]);
         }
     }
+
+    public function failed(\Throwable $exception): void
+    {
+        $this->step->update([
+            'status' => DeploymentStatus::FAILED,
+            'finished_at' => now(),
+            'logs' => $this->step->logs . "\n" . trim($exception->getMessage()),
+        ]);
+
+        $this->step->deployment->steps()->where('order', '>', $this->step->order)->update([
+            'status' => DeploymentStatus::CANCELLED,
+        ]);
+
+        $this->step->deployment->update([
+            'status' => DeploymentStatus::FAILED,
+        ]);
+    }
 }
