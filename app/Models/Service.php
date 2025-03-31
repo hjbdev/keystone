@@ -43,7 +43,7 @@ class Service extends Model
         ?string $defaultPassword = null,
     ): Driver
     {
-        $class = config("keystone.drivers.{$this->driver_name}.{$this->version}");
+        $class = config("keystone.drivers.{$this->driver_name}");
         if (!class_exists($class)) {
             throw new \Exception("Driver class {$class} not found");
         }
