@@ -3,6 +3,7 @@
 namespace App\Jobs\Services;
 
 use App\Enums\DeploymentStatus;
+use App\Enums\ServiceStatus;
 use App\Models\Step;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -59,6 +60,14 @@ class RunStep implements ShouldQueue
         // Dispatch the next step if available
         if ($nextStep = $this->step->deployment->steps()->where('order', '>', $this->step->order)->orderBy('order', 'asc')->first()) {
             $nextStep->dispatchJob();
+        } else {
+            $this->step->deployment->update([
+                'status' => DeploymentStatus::COMPLETED,
+                'finished_at' => now(),
+            ]);
+            $this->step->deployment->target->update([
+                'status' => ServiceStatus::RUNNING,
+            ]);
         }
     }
 }
