@@ -31,12 +31,12 @@ class DatabaseSeeder extends Seeder
             'owner_id' => 1,
         ]);
 
-        $organisation->members()->attach($user, ['role'  => OrganisationRole::Admin]);
+        $organisation->members()->attach($user, ['role'  => OrganisationRole::ADMIN]);
 
         $application = $organisation->applications()->create([
             'name' => 'ClipBin',
             'repository_url' => 'git@github.com:hjbdev/clipbin.git',
-            'repository_type' => RepositoryType::Git,
+            'repository_type' => RepositoryType::GIT,
         ]);
 
         $application->environments()->create([

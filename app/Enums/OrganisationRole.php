@@ -4,6 +4,6 @@ namespace App\Enums;
 
 enum OrganisationRole: string
 {
-    case Admin = 'admin';
-    case Member = 'member';
+    case ADMIN = 'admin';
+    case MEMBER = 'member';
 }

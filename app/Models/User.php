@@ -26,7 +26,7 @@ class User extends Authenticatable
                 'slug' => Organisation::createUniqueSlug($user->name),
                 'owner_id' => $user->id,
             ]);
-            $organisation->members()->attach($user, ['role' => OrganisationRole::Admin]);
+            $organisation->members()->attach($user, ['role' => OrganisationRole::ADMIN]);
         });
     }
 
