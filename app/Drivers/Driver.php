@@ -4,12 +4,14 @@ namespace App\Drivers;
 
 use App\Data\Deployments\Plan;
 
-interface Driver
+abstract class Driver
 {
-    public Plan $deploymentPlan { get; }
+    public Plan $deploymentPlan;
+    public ?string $containerName;
+    public ?string $containerId;
 
-    public function __construct(
-        public ?string $containerName = null,
-        public ?string $containerId = null,
+    abstract public function __construct(
+        ?string $containerName = null,
+        ?string $containerId = null,
     );
 }

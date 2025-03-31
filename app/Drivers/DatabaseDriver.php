@@ -2,7 +2,7 @@
 
 namespace App\Drivers;
 
-abstract class DatabaseDriver implements Driver
+abstract class DatabaseDriver extends Driver
 {
     public string $defaultUser = 'keystone';
     public string $defaultDb = 'keystone';
