@@ -36,7 +36,6 @@ class CreateServiceCommand extends Command
             category: ServiceCategory::DATABASE,
             type: ServiceType::tryFrom($type),
             version: $version,
-            driverName: $serviceType,
         );
 
         $this->components->info('Service created successfully');

@@ -17,14 +17,14 @@ class CreateService
         ServiceCategory $category,
         ServiceType $type,
         string $version,
-        string $driverName,
     ) {
+        $driverName = "{$type->value}.{$version}";
         $service = $server->services()->create([
             'name' => $name,
             'category' => $category,
-            'type' => $type,
+            'type' => $type, // postgres
             'version' => $version, // 17
-            'driver_name' => $driverName, // postgres
+            'driver_name' => $driverName, // postgres.17
             'status' => ServiceStatus::NOT_INSTALLED,
         ]);
 
