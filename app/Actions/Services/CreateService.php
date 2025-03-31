@@ -31,5 +31,7 @@ class CreateService
         $defaultPassword = Str::random(16);
 
         dispatch(new DeployService($service, $defaultPassword));
+
+        return ['defaultPassword' => $defaultPassword, 'service' => $service];
     }
 }

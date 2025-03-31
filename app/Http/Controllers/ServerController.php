@@ -103,7 +103,7 @@ class ServerController extends Controller
         $server = $organisation->servers()->findOrFail($request->route('server'));
 
         return inertia('servers/Show', [
-            'server' => $server,
+            'server' => $server->load('services'),
         ]);
     }
 }
