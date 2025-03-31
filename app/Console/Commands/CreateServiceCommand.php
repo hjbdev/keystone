@@ -28,13 +28,14 @@ class CreateServiceCommand extends Command
         ]);
 
         $serviceName = $this->components->ask('Enter the service name');
+        list ($type, $version) = explode('-', $serviceType);
 
         $service = app(CreateService::class)->execute(
             server: $server,
             name: $serviceName,
             category: ServiceCategory::DATABASE,
-            type: ServiceType::POSTGRES,
-            version: '17',
+            type: ServiceType::tryFrom($type),
+            version: $version,
             driverName: $serviceType,
         );
 
