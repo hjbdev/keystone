@@ -7,6 +7,7 @@ use App\Enums\ServerStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Ssh\Ssh;
 
 class Server extends Model
 {
@@ -28,5 +29,17 @@ class Server extends Model
     public function services(): HasMany
     {
         return $this->hasMany(Service::class);
+    }
+
+    public function firewallRules(): HasMany
+    {
+        return $this->hasMany(FirewallRule::class);
+    }
+
+    public function sshClient(string $user = 'root'): Ssh
+    {
+        return Ssh::create($user, $this->ipv4)
+            ->usePrivateKey(storage_path('app/private/ssh/id_ed25519'))
+            ->disableStrictHostKeyChecking();
     }
 }

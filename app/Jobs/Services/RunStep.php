@@ -30,9 +30,7 @@ class RunStep implements ShouldQueue
 
         $server = $this->step->deployment->target->server;
 
-        $ssh = Ssh::create('root', $server->ipv4)
-            ->usePrivateKey(storage_path('app/private/ssh/id_ed25519'))
-            ->disableStrictHostKeyChecking()
+        $ssh = $server->sshClient()
             ->onOutput(function ($output) {
                 $this->step->update([
                     'logs' => $this->step->logs . "\n" . trim($output),

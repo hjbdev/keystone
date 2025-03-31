@@ -83,7 +83,7 @@ class ServerController extends Controller
             'region' => $request->location,
             'os' => $request->image,
             'plan' => $request->server_type,
-            'user' => '',
+            'user' => 'keystone',
         ]);
 
         dispatch(new WaitForServerToConnect(
@@ -103,7 +103,7 @@ class ServerController extends Controller
         $server = $organisation->servers()->findOrFail($request->route('server'));
 
         return inertia('servers/Show', [
-            'server' => $server->load('services'),
+            'server' => $server->load('services.slices'),
         ]);
     }
 }
