@@ -20,10 +20,6 @@ class Postgres17Driver extends DatabaseDriver
     {
         $this->deploymentPlan = new Plan(steps: [
             new Step(
-                name: 'Check docker is installed',
-                script: 'command -v docker >/dev/null 2>&1 || { echo >&2 "Docker is not installed. Aborting."; exit 1; }',
-            ),
-            new Step(
                 name: 'Run the docker image',
                 secrets: [
                     'defaultpassword' => $this->defaultPassword,
