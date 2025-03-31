@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Slice extends Model
 {
+    protected $guarded = [];
+
     public function service(): BelongsTo
     {
         return $this->belongsTo(Service::class);

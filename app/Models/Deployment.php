@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Deployment extends Model
 {
+    protected $guarded = [];
+
     protected function casts(): array
     {
         return [

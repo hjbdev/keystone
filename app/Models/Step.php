@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Step extends Model
 {
+    protected $guarded = [];
+
     protected function casts(): array
     {
         return [
