@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\OrganisationRole;
 use App\Enums\RepositoryType;
 use App\Models\Organisation;
+use App\Models\Server;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -30,6 +31,10 @@ class DatabaseSeeder extends Seeder
             'slug' => 'stratbucket',
             'owner_id' => 1,
         ]);
+
+        $servers = Server::factory(40)->forOrganisation($organisation->id)->create();
+
+        $organisation->servers()->saveMany($servers);
 
         $organisation->members()->attach($user, ['role'  => OrganisationRole::ADMIN]);
 

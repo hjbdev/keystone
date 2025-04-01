@@ -2,7 +2,11 @@
 
 namespace App\Enums;
 
+use App\Enums\Concerns\Arrayable;
+
 enum ServiceType: string {
+    use Arrayable;
+
     case FRANKENPHP = 'frankenphp';
     case PHP_FPM = 'php-fpm';
     case POSTGRES = 'postgres';

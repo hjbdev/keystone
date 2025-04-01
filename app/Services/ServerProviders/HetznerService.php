@@ -104,6 +104,6 @@ class HetznerService extends ServerProviderService
                 osFlavor: $image['os_flavor'],
                 osVersion: $image['os_version'],
             );
-        })->values();
+        })->where('osVersion', '!=', 'unknown')->values();
     }
 }
