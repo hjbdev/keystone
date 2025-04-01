@@ -5,6 +5,7 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\EnvironmentController;
 use App\Http\Controllers\OrganisationController;
 use App\Http\Controllers\ServerController;
+use App\Http\Controllers\ServiceController;
 use App\Models\Server;
 use App\Support\Ip;
 use Illuminate\Http\Request;
@@ -27,6 +28,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('show', 'servers.show')
             ->name('create', 'servers.create')
             ->name('store', 'servers.store');
+
+        Route::prefix('servers/{server}')->group(function () {
+            Route::resource('services', ServiceController::class)
+                ->only('create', 'store')
+                ->name('create', 'services.create')
+                ->name('store', 'services.store');
+        });
         
         Route::resource('applications', ApplicationController::class)
             ->only('show')

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { useCycleList, useInterval } from '@vueuse/core';
-import { DatabaseIcon, Layers2Icon, LoaderCircleIcon } from 'lucide-vue-next';
+import { DatabaseIcon, Layers2Icon, LoaderCircleIcon, PlusIcon } from 'lucide-vue-next';
 import { watch } from 'vue';
 
 const props = defineProps({
@@ -60,7 +61,18 @@ watch(counter, () => {
 
             <template v-if="server.status === 'active'">
                 <div>
-                    <h3 class="mb-3 text-2xl font-semibold tracking-tight">Services</h3>
+                    <div class="mb-3 flex items-center justify-between">
+                        <h3 class="text-2xl font-semibold tracking-tight">Services</h3>
+                        <div>
+                            <Button :as="Link" :href="route('services.create', {
+                                organisation: $page.props.organisation.id,
+                                server: server.id,
+                            })" size="xs">
+                                <PlusIcon class="size-4" />
+                                Add
+                            </Button>
+                        </div>
+                    </div>
                     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         <Card v-for="service in server.services" :key="service.id">
                             <CardHeader>
