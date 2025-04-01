@@ -69,6 +69,14 @@ class GenerateJSEnums extends Command
                 $js .= "\n";
             }
 
+            if (method_exists($enum, 'getDescription')) {
+                $values = $enum::toArray();
+                $descriptions = array_map(fn($key) => $enum::getDescription($key), $values);
+                $js .= 'export const DescriptionMap = ';
+                $js .= json_encode($descriptions, JSON_PRETTY_PRINT) . "\n";
+                $js .= "\n";
+            }
+
             if (method_exists($enum, 'colours')) {
                 $colours = $enum::colours();
                 $js .= 'export const ColourMap = ';

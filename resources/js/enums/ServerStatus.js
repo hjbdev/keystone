@@ -1,5 +1,5 @@
 // This is a generated file. 
-// Published at 2025-04-01 16:18:32
+// Published at 2025-04-01 16:27:12
 
 export default {
     "WAITING_FOR_PROVIDER": "waiting-for-provider",
