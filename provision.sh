@@ -34,7 +34,7 @@ apt update
 apt_wait
 apt upgrade -y
 apt_wait
-apt install unzip curl fail2ban ufw -y
+apt install unzip curl fail2ban ufw wireguard -y
 
 # No password logins
 sed -i "/PasswordAuthentication yes/d" /etc/ssh/sshd_config
@@ -91,8 +91,7 @@ chmod 700 /home/keystone/.ssh/id_rsa
 
 # Setup UFW Firewall
 ufw allow 22
-# ufw allow 80 # only if web
-# ufw allow 443
+ufw allow 51820 # wireguard
 ufw --force enable
 
 # Add Keystone User To www-data Group
