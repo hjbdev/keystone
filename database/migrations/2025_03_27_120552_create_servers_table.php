@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('provider_id');
             $table->string('ipv4');
             $table->string('ipv6');
+            $table->string('private_ip');
             $table->string('provider_status');
             $table->string('status');
             $table->string('region');
