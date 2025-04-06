@@ -24,7 +24,7 @@ enum ServiceCategory: string
         return match ($category) {
             self::APPLICATION => 'The base container image for your application',
             self::DATABASE => 'Postgres or MySQL',
-            self::GATEWAY => 'The gateway is the first point of contact for your application',
+            self::GATEWAY => 'The first point of contact for your application',
             self::STORAGE => 'S3 or S3-compatible service',
             self::CACHE => 'Redis, Memcached or similar',
         };

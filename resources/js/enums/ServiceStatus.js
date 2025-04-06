@@ -1,5 +1,5 @@
 // This is a generated file. 
-// Published at 2025-04-01 16:27:12
+// Published at 2025-04-06 16:01:50
 
 export default {
     "NOT_INSTALLED": "not-installed",

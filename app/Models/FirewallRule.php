@@ -15,7 +15,7 @@ class FirewallRule extends Model
         parent::boot();
 
         static::created(function (self $firewallRule) {
-            $firewallRule->execute();
+            $firewallRule->install();
         });
     }
 
@@ -31,7 +31,7 @@ class FirewallRule extends Model
         return $this->belongsTo(Server::class);
     }
 
-    public function execute(): void
+    public function install(): void
     {
         $ssh = $this->server->sshClient();
 
@@ -60,6 +60,38 @@ class FirewallRule extends Model
         }
         $this->update([
             'status' => FirewallRuleStatus::APPLIED,
+        ]);
+    }
+
+    public function remove(): void
+    {
+        $ssh = $this->server->sshClient();
+
+        $command = "ufw";
+
+        if ($this->type === 'allow') {
+            $command .= " delete allow";
+        } elseif ($this->type === 'deny') {
+            $command .= " delete deny";
+        }
+
+        if ($this->from) {
+            $command .= " from {$this->from}";
+            $command .= " to any port";
+        }
+
+        $command .= " {$this->ports}";
+
+        $result = $ssh->execute($command);
+
+        if (! $result->isSuccessful()) {
+            $this->update([
+                'status' => FirewallRuleStatus::FAILED,
+            ]);
+            return;
+        }
+        $this->update([
+            'status' => FirewallRuleStatus::REMOVED,
         ]);
     }
 }

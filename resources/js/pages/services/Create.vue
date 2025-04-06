@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import InputError from '@/components/InputError.vue';
 import ServiceCategory, { DescriptionMap as serviceCategoryDescriptions } from '@/enums/ServiceCategory';
 import RadioButton from '@/components/RadioButton.vue';
+import { AppWindowIcon, ArchiveIcon, DatabaseIcon, DatabaseZapIcon, DoorOpenIcon } from 'lucide-vue-next';
 
 const props = defineProps({});
 
@@ -15,6 +16,23 @@ const form = useForm({
     category: null,
     type: null,
 });
+
+function getIcon(category) {
+    switch (category) {
+        case ServiceCategory.DATABASE:
+            return DatabaseIcon;
+        case ServiceCategory.CACHE:
+            return DatabaseZapIcon;
+        case ServiceCategory.APPLICATION:
+            return AppWindowIcon;
+        case ServiceCategory.GATEWAY:
+            return DoorOpenIcon;
+        case ServiceCategory.STORAGE:
+            return ArchiveIcon;
+        default:
+            return null;
+    }
+}
 </script>
 
 <template>
@@ -37,15 +55,19 @@ const form = useForm({
         ]"
     >
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-            <div class="flex gap-2">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-2">
                 <RadioButton
                     v-for="(category, categoryKey) in ServiceCategory"
                     v-model="form.category"
                     :value="category"
                     name="category"
+                    class="py-3 flex gap-3"
                 >
-                    <h4 class="text-lg font-semibold tracking-tighter">{{ category }}</h4>
-                    <p class="text-sm">{{ serviceCategoryDescriptions[categoryKey] }}</p>
+                    <component :is="getIcon(category)" class="size-5" />
+                    <div>
+                        <h4 class="text-lg font-semibold tracking-tighter leading-none mb-1">{{ category }}</h4>
+                        <p class="text-sm">{{ serviceCategoryDescriptions[categoryKey] }}</p>
+                    </div>
                 </RadioButton>
             </div>
 
