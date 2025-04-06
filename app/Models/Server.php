@@ -25,6 +25,16 @@ class Server extends Model
         ];
     }
 
+    public function externalNetwork(): BelongsTo
+    {
+        return $this->belongsTo(Network::class, 'external_network_id');
+    }
+    
+    public function internalNetwork(): BelongsTo
+    {
+        return $this->belongsTo(Network::class, 'internal_network_id');
+    }
+
     public function organisation(): BelongsTo
     {
         return $this->belongsTo(Organisation::class);
