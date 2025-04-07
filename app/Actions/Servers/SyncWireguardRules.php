@@ -27,7 +27,7 @@ class SyncWireguardRules
         $output = $result->getOutput();
         $commands = collect();
 
-        $server->organisation->servers()->where('id', '!=', $server->id)->each(function ($organisationServer) use (&$commands, $output, $server) {
+        $server->organisation->servers()->where('id', '!=', $server->id)->each(function ($organisationServer) use (&$commands, $output) {
             if (Str::contains($output, $organisationServer->internal_public_key)) {
                 $commands->push("wg set wg0 peer {$organisationServer->internal_public_key} remove");
             }
@@ -43,7 +43,7 @@ class SyncWireguardRules
             ]);
             throw new \Exception('Failed to sync WireGuard rules');
         }
-        
+
         logger()->info('Successfully synced WireGuard rules', [
             'server_id' => $server->id,
             'commands' => $commands->toArray(),
