@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Enums\ServerProvider;
 use App\Enums\ServerStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

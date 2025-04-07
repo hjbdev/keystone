@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Actions\GenerateRandomSlug;
 use App\Actions\GetProviderService;
-use App\Enums\ServerProvider;
 use App\Enums\ServerStatus;
 use App\Jobs\Servers\WaitForServerToConnect;
 use App\Models\Organisation;
+use App\Models\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -30,7 +30,8 @@ class ServerController extends Controller
         $images = null;
 
         if ($request->has('provider')) {
-            $providerService = app(GetProviderService::class)->execute($request->provider);
+            $provider = Provider::findOrFail($request->provider);
+            $providerService = $provider->service();
 
             if ($providerService) {
                 $locations = Cache::remember($request->provider.'.locations', now()->addHour(), function () use ($providerService) {

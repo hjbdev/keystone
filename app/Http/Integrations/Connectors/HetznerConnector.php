@@ -2,10 +2,16 @@
 
 namespace App\Http\Integrations\Connectors;
 
+use App\Models\Provider;
 use Saloon\Http\Connector;
 
 class HetznerConnector extends Connector
 {
+    public function __construct(protected readonly Provider $provider)
+    {
+        //
+    }
+
     public function resolveBaseUrl(): string
     {
         return 'https://api.hetzner.cloud/v1';
@@ -16,7 +22,7 @@ class HetznerConnector extends Connector
         return [
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer '.config('services.hetzner.key'),
+            'Authorization' => 'Bearer '.$this->provider->token,
         ];
     }
 }

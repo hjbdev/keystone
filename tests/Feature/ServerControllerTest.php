@@ -54,23 +54,6 @@ test('store route fails with invalid provider', function () {
 test('store route creates a server with valid data', function () {
     $organisation = Organisation::factory()->create();
 
-    $this->mock(GetProviderService::class, function ($mock) {
-        $providerMock = \Mockery::mock(\App\Services\ServerProviders\ServerProviderService::class);
-
-        $providerMock->shouldReceive('createServer')->andReturn(
-            new CreatedServer(
-                name: 'test-server',
-                id: 123,
-                ipv4: '127.0.0.1',
-                ipv6: '::1',
-                status: 'running',
-                rootPassword: Str::random(16),
-            )
-        );
-
-        $mock->shouldReceive('execute')->andReturn($providerMock);
-    });
-
     $response = $this->post(route('servers.store', ['organisation' => $organisation->id]), [
         'provider' => 'hetzner',
         'server_type' => 'cx11',

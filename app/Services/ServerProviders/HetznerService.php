@@ -11,14 +11,15 @@ use App\Http\Integrations\Requests\Hetzner\Images\GetImagesRequest;
 use App\Http\Integrations\Requests\Hetzner\Locations\GetLocationsRequest;
 use App\Http\Integrations\Requests\Hetzner\Servers\CreateServerRequest;
 use App\Http\Integrations\Requests\Hetzner\ServerTypes\GetServerTypesRequest;
+use App\Models\Provider;
 use Exception;
 use Illuminate\Support\Collection;
 
 class HetznerService extends ServerProviderService
 {
-    public function __construct()
+    public function __construct(Provider $provider)
     {
-        $this->connector = new HetznerConnector;
+        $this->connector = new HetznerConnector($provider);
     }
 
     public function createServer(

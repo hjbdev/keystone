@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\NetworkType;
-use App\Enums\ServerProvider;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
