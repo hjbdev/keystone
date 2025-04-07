@@ -59,7 +59,8 @@ class ServerController extends Controller
     public function store(Request $request)
     {
         $sudoPassword = Str::random(32);
-        $providerService = app(GetProviderService::class)->execute($request->provider);
+        $provider = Provider::findOrFail($request->provider);
+        $providerService = $provider->service();
 
         if (! $providerService) {
             return back()->with('error', 'Invalid provider');
@@ -76,8 +77,8 @@ class ServerController extends Controller
 
         $server = $organisation->servers()->create([
             'name' => $createdServer->name,
-            // 'provider' => ServerProvider::tryFrom($request->provider), // @todo
-            'provider_id' => $createdServer->id,
+            'provider_id' => $provider->id,
+            'external_id' => $createdServer->id,
             'ipv4' => $createdServer->ipv4,
             'ipv6' => $createdServer->ipv6,
             'provider_status' => $createdServer->status,

@@ -8,7 +8,7 @@ enum FirewallRuleStatus: string
 {
     use Arrayable;
 
-    case UNINSTALLED = 'uninstalled';
+    case NOT_INSTALLED = 'not-installed';
     case INSTALLED = 'installed';
     case FAILED = 'failed';
     case REMOVED = 'removed';

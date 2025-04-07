@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(Network::class, 'external_network_id');
             $table->foreignIdFor(Network::class, 'internal_network_id');
             $table->foreignIdFor(Provider::class);
-            $table->string('provider_external_id')->nullable();
+            $table->string('external_id')->nullable();
             $table->string('name');
             $table->string('ipv4');
             $table->string('ipv6');

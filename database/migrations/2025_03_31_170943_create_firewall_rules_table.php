@@ -12,7 +12,7 @@ return new class extends Migration
     {
         Schema::create('firewall_rules', function (Blueprint $table) {
             $table->id();
-            $table->string('status')->default(FirewallRuleStatus::NOT_APPLIED->value);
+            $table->string('status')->default(FirewallRuleStatus::NOT_INSTALLED->value);
             $table->foreignIdfor(Server::class);
             $table->string('type');
             $table->string('ports');

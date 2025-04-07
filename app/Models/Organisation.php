@@ -40,6 +40,11 @@ class Organisation extends Model
         return $this->hasMany(Application::class);
     }
 
+    public function providers(): HasMany
+    {
+        return $this->hasMany(Provider::class);
+    }
+
     public static function createUniqueSlug(string $name): string
     {
         $slug = Str::slug($name);

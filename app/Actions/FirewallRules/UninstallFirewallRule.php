@@ -25,7 +25,7 @@ class UninstallFirewallRule
         }
 
         $firewallRule->update([
-            'status' => FirewallRuleStatus::UNINSTALLED,
+            'status' => FirewallRuleStatus::REMOVED,
         ]);
     }
 }
