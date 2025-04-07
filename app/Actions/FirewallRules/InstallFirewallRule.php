@@ -20,6 +20,7 @@ class InstallFirewallRule
             $firewallRule->update([
                 'status' => FirewallRuleStatus::FAILED,
             ]);
+
             return;
         }
 

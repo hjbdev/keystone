@@ -20,6 +20,7 @@ class OrganisationFactory extends Factory
     {
         $name = $this->faker->company();
         $owner = User::inRandomOrder()->first() ?: User::factory()->create();
+
         return [
             'name' => $this->faker->company(),
             'slug' => Organisation::createUniqueSlug($name),

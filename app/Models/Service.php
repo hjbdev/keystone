@@ -41,12 +41,12 @@ class Service extends Model
 
     public function driver(
         ?string $defaultPassword = null,
-    ): Driver
-    {
+    ): Driver {
         $class = config("keystone.drivers.{$this->driver_name}");
-        if (!class_exists($class)) {
+        if (! class_exists($class)) {
             throw new \Exception("Driver class {$class} not found");
         }
+
         return new $class($this->container_name, $this->container_id, defaultPassword: $defaultPassword);
     }
 }

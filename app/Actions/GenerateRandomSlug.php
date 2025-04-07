@@ -12,7 +12,7 @@ class GenerateRandomSlug
         $slug = '';
 
         for ($i = 0; $i < $adjectiveCount; $i++) {
-            $slug .= $adjectives[array_rand($adjectives)] . '-';
+            $slug .= $adjectives[array_rand($adjectives)].'-';
         }
 
         $slug .= $nouns[array_rand($nouns)];

@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Spatie\Ssh\Ssh;
 
-class ProvisionServer implements ShouldQueue, ShouldBeEncrypted
+class ProvisionServer implements ShouldBeEncrypted, ShouldQueue
 {
     use Queueable;
 
@@ -37,7 +37,7 @@ class ProvisionServer implements ShouldQueue, ShouldBeEncrypted
         // Download the provision script and execute it
         // The script will run in the background
         $result = $ssh->execute([
-            'wget --quiet --output-document=provision.sh "' . $provisionScriptUrl . '"',
+            'wget --quiet --output-document=provision.sh "'.$provisionScriptUrl.'"',
             'chmod +x provision.sh',
             'nohup ./provision.sh > /dev/null 2>&1 &',
         ]);
@@ -46,6 +46,7 @@ class ProvisionServer implements ShouldQueue, ShouldBeEncrypted
             $this->server->update([
                 'status' => ServerStatus::PROVISIONING_FAILED,
             ]);
+
             return;
         }
 

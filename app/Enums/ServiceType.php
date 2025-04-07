@@ -4,7 +4,8 @@ namespace App\Enums;
 
 use App\Enums\Concerns\Arrayable;
 
-enum ServiceType: string {
+enum ServiceType: string
+{
     use Arrayable;
 
     case FRANKENPHP = 'frankenphp';

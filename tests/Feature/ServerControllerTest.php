@@ -5,8 +5,6 @@ use App\Data\ServerProviders\CreatedServer;
 use App\Models\Organisation;
 use App\Models\Server;
 use App\Models\User;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia;
 
@@ -27,7 +25,7 @@ test('index route displays servers for an organisation', function () {
 
     $response = $this->get(route('servers.index', ['organisation' => $organisation->id]));
     $response->assertStatus(200);
-    $response->assertInertia(fn(AssertableInertia $page) => $page
+    $response->assertInertia(fn (AssertableInertia $page) => $page
         ->component('servers/Index'));
 });
 
@@ -35,7 +33,7 @@ test('create route returns inertia view', function () {
     $organisation = Organisation::factory()->create();
     $response = $this->get(route('servers.create', ['organisation' => $organisation->id]));
     $response->assertStatus(200);
-    $response->assertInertia(fn(AssertableInertia $page) => $page
+    $response->assertInertia(fn (AssertableInertia $page) => $page
         ->component('servers/Create'));
 });
 
@@ -67,7 +65,7 @@ test('store route creates a server with valid data', function () {
                 ipv6: '::1',
                 status: 'running',
                 rootPassword: Str::random(16),
-                )
+            )
         );
 
         $mock->shouldReceive('execute')->andReturn($providerMock);
@@ -95,10 +93,10 @@ test('show route displays a single server', function () {
 
     $response = $this->get(route('servers.show', [
         'organisation' => $organisation->id,
-        'server' => $server->id
+        'server' => $server->id,
     ]));
 
     $response->assertStatus(200);
-    $response->assertInertia(fn(AssertableInertia $page) => $page
+    $response->assertInertia(fn (AssertableInertia $page) => $page
         ->component('servers/Show'));
 });

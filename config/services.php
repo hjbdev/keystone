@@ -37,6 +37,6 @@ return [
 
     'hetzner' => [
         'key' => env('HETZNER_KEY'),
-    ]
+    ],
 
 ];

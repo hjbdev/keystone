@@ -33,11 +33,11 @@ class Server extends Model
             $existingServer = Server::whereOrganisationId($server->organisation_id)
                 ->orderByDesc('internal_ip_ending')
                 ->first();
-            
+
             $server->internal_ip_ending = $existingServer
                 ? $existingServer->internal_ip_ending + 1
                 : 2;
-            $server->internal_ip = config('keystone.internal_ip_base') . $server->internal_ip_ending;
+            $server->internal_ip = config('keystone.internal_ip_base').$server->internal_ip_ending;
         });
     }
 
@@ -45,7 +45,7 @@ class Server extends Model
     {
         return $this->belongsTo(Network::class, 'external_network_id');
     }
-    
+
     public function internalNetwork(): BelongsTo
     {
         return $this->belongsTo(Network::class, 'internal_network_id');

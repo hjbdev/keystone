@@ -7,7 +7,7 @@ use App\Enums\Concerns\Arrayable;
 enum ServerStatus: string
 {
     use Arrayable;
-    
+
     case WAITING_FOR_PROVIDER = 'waiting-for-provider';
     case PROVIDER_TIMEOUT = 'provider-timeout';
     case UNPROVISIONED = 'unprovisioned';

@@ -11,6 +11,7 @@ use Illuminate\Console\Command;
 class CreateServiceCommand extends Command
 {
     protected $signature = 'service:create';
+
     protected $description = 'Create a service';
 
     public function handle()
@@ -18,17 +19,18 @@ class CreateServiceCommand extends Command
         $serverId = $this->components->ask('Enter the server ID');
         $server = Server::find($serverId);
 
-        if (!$server) {
+        if (! $server) {
             $this->components->error('Server not found');
+
             return;
         }
 
         $serviceType = $this->components->choice('select the service you want to install', [
-            'postgres-17'
+            'postgres-17',
         ]);
 
         $serviceName = $this->components->ask('Enter the service name');
-        list ($type, $version) = explode('-', $serviceType);
+        [$type, $version] = explode('-', $serviceType);
 
         $service = app(CreateService::class)->execute(
             server: $server,

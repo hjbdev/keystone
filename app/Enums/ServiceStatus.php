@@ -7,7 +7,7 @@ use App\Enums\Concerns\Arrayable;
 enum ServiceStatus: string
 {
     use Arrayable;
-    
+
     case NOT_INSTALLED = 'not-installed';
     case INSTALLING = 'installing';
     case RUNNING = 'running';

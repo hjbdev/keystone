@@ -29,7 +29,7 @@ class Network extends Model
     {
         return $this->hasMany(Server::class, 'external_network_id');
     }
-    
+
     public function organisation(): BelongsTo
     {
         return $this->belongsTo(Organisation::class);

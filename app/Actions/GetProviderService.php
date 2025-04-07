@@ -7,10 +7,10 @@ use App\Services\ServerProviders\ServerProviderService;
 
 class GetProviderService
 {
-    public function execute(string $provider): ServerProviderService|null
+    public function execute(string $provider): ?ServerProviderService
     {
         return match ($provider) {
-            'hetzner' => new HetznerService(),
+            'hetzner' => new HetznerService,
             default => null,
         };
     }

@@ -18,8 +18,7 @@ class DeployService implements ShouldQueue
     public function __construct(
         public Service $service,
         public ?string $defaultPassword = null,
-    )
-    {
+    ) {
         //
     }
 
@@ -27,7 +26,7 @@ class DeployService implements ShouldQueue
     {
         $driver = $this->service->driver($this->defaultPassword);
         $this->service->update([
-            'status' => ServiceStatus::INSTALLING
+            'status' => ServiceStatus::INSTALLING,
         ]);
         $this->deployment = $this->service->deployments()->create([
             'status' => DeploymentStatus::PENDING,

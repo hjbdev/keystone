@@ -35,7 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->name('create', 'services.create')
                 ->name('store', 'services.store');
         });
-        
+
         Route::resource('applications', ApplicationController::class)
             ->only('show')
             ->name('show', 'applications.show');
@@ -87,10 +87,11 @@ Route::post('/provision-callback', function (Request $request) {
 
     if (! $isValidIp) {
         logger('someone tried to callback from an invalid IP');
-        logger(' server ip: ' . $server->ipv4);
-        logger(' server ipv6: ' . $server->ipv6);
-        logger(' callback ip: ' . $request->ip());
-        logger(' server id: ' . $server->id);
+        logger(' server ip: '.$server->ipv4);
+        logger(' server ipv6: '.$server->ipv6);
+        logger(' callback ip: '.$request->ip());
+        logger(' server id: '.$server->id);
+
         return response('Unauthorized', 401);
     }
 
@@ -101,5 +102,5 @@ Route::post('/provision-callback', function (Request $request) {
     return response('OK', 200);
 })->name('provision.callback');
 
-require __DIR__ . '/settings.php';
-require __DIR__ . '/auth.php';
+require __DIR__.'/settings.php';
+require __DIR__.'/auth.php';

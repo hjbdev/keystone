@@ -8,11 +8,9 @@ use App\Enums\ServerProvider;
 use App\Enums\ServerStatus;
 use App\Jobs\Servers\WaitForServerToConnect;
 use App\Models\Organisation;
-use App\Services\ServerProviders\HetznerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
-use NunoMaduro\Collision\Provider;
 
 class ServerController extends Controller
 {
@@ -35,13 +33,13 @@ class ServerController extends Controller
             $providerService = app(GetProviderService::class)->execute($request->provider);
 
             if ($providerService) {
-                $locations = Cache::remember($request->provider . '.locations', now()->addHour(), function () use ($providerService) {
+                $locations = Cache::remember($request->provider.'.locations', now()->addHour(), function () use ($providerService) {
                     return $providerService->getLocations();
                 });
-                $serverTypes = Cache::remember($request->provider . '.serverTypes', now()->addHour(), function () use ($providerService) {
+                $serverTypes = Cache::remember($request->provider.'.serverTypes', now()->addHour(), function () use ($providerService) {
                     return $providerService->getServerTypes();
                 });
-                $images = Cache::remember($request->provider . '.images', now()->addHour(), function () use ($providerService) {
+                $images = Cache::remember($request->provider.'.images', now()->addHour(), function () use ($providerService) {
                     return $providerService->getImages();
                 });
             }
@@ -59,7 +57,7 @@ class ServerController extends Controller
         $sudoPassword = Str::random(32);
         $providerService = app(GetProviderService::class)->execute($request->provider);
 
-        if (!$providerService) {
+        if (! $providerService) {
             return back()->with('error', 'Invalid provider');
         }
 

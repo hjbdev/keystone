@@ -45,8 +45,9 @@ class Organisation extends Model
         $slug = Str::slug($name);
         $count = 2;
         while (Organisation::where('slug', $slug)->exists()) {
-            $slug = Str::slug($name) . '-' . $count++;
+            $slug = Str::slug($name).'-'.$count++;
         }
+
         return $slug;
     }
 }

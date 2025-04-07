@@ -7,7 +7,6 @@ use App\Enums\ServiceStatus;
 use App\Models\Step;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Spatie\Ssh\Ssh;
 
 class RunStep implements ShouldQueue
 {
@@ -15,8 +14,7 @@ class RunStep implements ShouldQueue
 
     public function __construct(
         protected Step $step,
-    )
-    {
+    ) {
         //
     }
 
@@ -33,7 +31,7 @@ class RunStep implements ShouldQueue
         $ssh = $server->sshClient()
             ->onOutput(function ($output) {
                 $this->step->update([
-                    'logs' => $this->step->logs . "\n" . trim($output),
+                    'logs' => $this->step->logs."\n".trim($output),
                 ]);
             });
 
@@ -43,7 +41,7 @@ class RunStep implements ShouldQueue
             $this->step->update([
                 'status' => DeploymentStatus::FAILED,
                 'finished_at' => now(),
-                'logs' => $this->step->logs . "\n" . trim($result->getErrorOutput()),
+                'logs' => $this->step->logs."\n".trim($result->getErrorOutput()),
             ]);
 
             return;
@@ -74,7 +72,7 @@ class RunStep implements ShouldQueue
         $this->step->update([
             'status' => DeploymentStatus::FAILED,
             'finished_at' => now(),
-            'logs' => $this->step->logs . "\n" . trim($exception->getMessage()),
+            'logs' => $this->step->logs."\n".trim($exception->getMessage()),
         ]);
 
         $this->step->deployment->steps()->where('order', '>', $this->step->order)->update([

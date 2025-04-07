@@ -40,10 +40,10 @@ class GenerateJSEnums extends Command
         }
 
         foreach ((new Finder)->in($paths)->files() as $enum) {
-            $enum = 'App\\' . str_replace(
+            $enum = 'App\\'.str_replace(
                 ['/', '.php'],
                 ['\\', ''],
-                Str::after($enum->getRealPath(), realpath(app_path()) . DIRECTORY_SEPARATOR)
+                Str::after($enum->getRealPath(), realpath(app_path()).DIRECTORY_SEPARATOR)
             );
 
             if (! class_exists($enum)) {
@@ -51,36 +51,36 @@ class GenerateJSEnums extends Command
             }
 
             $js = "// This is a generated file. \n";
-            $js .= '// Published at ' . now()->format('Y-m-d H:i:s') . "\n";
+            $js .= '// Published at '.now()->format('Y-m-d H:i:s')."\n";
             $js .= "\n";
             $js .= 'export default ';
-            $js .= json_encode($enum::toArray(), JSON_PRETTY_PRINT) . "\n";
+            $js .= json_encode($enum::toArray(), JSON_PRETTY_PRINT)."\n";
             $js .= "\n";
 
             if (method_exists($enum, 'getLabels')) {
                 $labels = $enum::getLabels();
                 $js .= 'export const LabelMap = ';
-                $js .= json_encode($labels, JSON_PRETTY_PRINT) . "\n";
+                $js .= json_encode($labels, JSON_PRETTY_PRINT)."\n";
                 $js .= "\n";
 
-                $labelSelect = array_map(fn($key) => ['title' => $labels[$key], 'id' => $key], array_keys($labels));
+                $labelSelect = array_map(fn ($key) => ['title' => $labels[$key], 'id' => $key], array_keys($labels));
                 $js .= 'export const LabelSelectMap = ';
-                $js .= json_encode($labelSelect, JSON_PRETTY_PRINT) . "\n";
+                $js .= json_encode($labelSelect, JSON_PRETTY_PRINT)."\n";
                 $js .= "\n";
             }
 
             if (method_exists($enum, 'getDescription')) {
                 $values = $enum::toArray();
-                $descriptions = array_map(fn($key) => $enum::getDescription($key), $values);
+                $descriptions = array_map(fn ($key) => $enum::getDescription($key), $values);
                 $js .= 'export const DescriptionMap = ';
-                $js .= json_encode($descriptions, JSON_PRETTY_PRINT) . "\n";
+                $js .= json_encode($descriptions, JSON_PRETTY_PRINT)."\n";
                 $js .= "\n";
             }
 
             if (method_exists($enum, 'colours')) {
                 $colours = $enum::colours();
                 $js .= 'export const ColourMap = ';
-                $js .= json_encode($colours, JSON_PRETTY_PRINT) . "\n";
+                $js .= json_encode($colours, JSON_PRETTY_PRINT)."\n";
                 $js .= "\n";
             }
 
@@ -88,10 +88,10 @@ class GenerateJSEnums extends Command
 
             // Skip format, JS date formats are different to PHP ones.
             if ($name !== 'Format') {
-                file_put_contents(base_path('resources/js/Enums/' . $name . '.js'), $js);
-                $this->info('Stored ' . $enum);
+                file_put_contents(base_path('resources/js/Enums/'.$name.'.js'), $js);
+                $this->info('Stored '.$enum);
             } else {
-                $this->info('Skipped ' . $name . 's');
+                $this->info('Skipped '.$name.'s');
             }
         }
     }

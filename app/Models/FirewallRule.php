@@ -36,21 +36,21 @@ class FirewallRule extends Model
 
     public function command(bool $delete = false): string
     {
-        $command = "ufw";
+        $command = 'ufw';
 
         if ($delete) {
-            $command .= " delete";
+            $command .= ' delete';
         }
 
         if ($this->type === 'allow') {
-            $command .= " allow";
+            $command .= ' allow';
         } elseif ($this->type === 'deny') {
-            $command .= " deny";
+            $command .= ' deny';
         }
 
         if ($this->from) {
             $command .= " from {$this->from}";
-            $command .= " to any port";
+            $command .= ' to any port';
         }
 
         $command .= " {$this->ports}";

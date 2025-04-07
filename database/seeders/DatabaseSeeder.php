@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
 
         $organisation->servers()->saveMany($servers);
 
-        $organisation->members()->attach($user, ['role'  => OrganisationRole::ADMIN]);
+        $organisation->members()->attach($user, ['role' => OrganisationRole::ADMIN]);
 
         $application = $organisation->applications()->create([
             'name' => 'ClipBin',
@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Dev',
             'branch' => 'main',
             'url' => 'https://dev.clipbin.hjb.dev',
-            'status' => 'active'
+            'status' => 'active',
         ]);
     }
 }

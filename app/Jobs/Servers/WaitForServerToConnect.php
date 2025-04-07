@@ -7,14 +7,14 @@ use App\Models\Server;
 use Illuminate\Contracts\Queue\ShouldBeEncrypted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Str;
 use Spatie\Ssh\Ssh;
 
-class WaitForServerToConnect implements ShouldQueue, ShouldBeEncrypted
+class WaitForServerToConnect implements ShouldBeEncrypted, ShouldQueue
 {
     use Queueable;
 
     public int $retryAfter = 15;
+
     public int $tries = 40;
 
     public function __construct(
@@ -35,6 +35,7 @@ class WaitForServerToConnect implements ShouldQueue, ShouldBeEncrypted
 
         if (! $process->isSuccessful()) {
             $this->release(15);
+
             return;
         }
 

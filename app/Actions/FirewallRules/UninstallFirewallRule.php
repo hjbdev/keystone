@@ -20,6 +20,7 @@ class UninstallFirewallRule
             $firewallRule->update([
                 'status' => FirewallRuleStatus::FAILED,
             ]);
+
             return;
         }
 

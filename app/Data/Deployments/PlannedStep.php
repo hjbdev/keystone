@@ -18,12 +18,13 @@ class PlannedStep
         }
     }
 
-    public function getSafeScript(): string 
+    public function getSafeScript(): string
     {
         $script = $this->script;
         foreach ($this->secrets as $key => $value) {
             $script = str_replace("[!{$key}]", '********', $script);
         }
+
         return $script;
     }
 
@@ -33,6 +34,7 @@ class PlannedStep
         foreach ($this->secrets as $key => $value) {
             $script = str_replace("[!{$key}]", $value, $script);
         }
+
         return $script;
     }
 }
