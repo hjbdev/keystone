@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Actions\FirewallRules\InstallFirewallRule;
 use App\Enums\FirewallRuleStatus;
+use App\Enums\FirewallRuleType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -15,7 +17,7 @@ class FirewallRule extends Model
         parent::boot();
 
         static::created(function (self $firewallRule) {
-            $firewallRule->install();
+            app(InstallFirewallRule::class)->execute($firewallRule);
         });
     }
 
@@ -23,6 +25,7 @@ class FirewallRule extends Model
     {
         return [
             'status' => FirewallRuleStatus::class,
+            'type' => FirewallRuleType::class,
         ];
     }
 
@@ -31,11 +34,13 @@ class FirewallRule extends Model
         return $this->belongsTo(Server::class);
     }
 
-    public function install(): void
+    public function command(bool $delete = false): string
     {
-        $ssh = $this->server->sshClient();
-
         $command = "ufw";
+
+        if ($delete) {
+            $command .= " delete";
+        }
 
         if ($this->type === 'allow') {
             $command .= " allow";
@@ -50,48 +55,6 @@ class FirewallRule extends Model
 
         $command .= " {$this->ports}";
 
-        $result = $ssh->execute($command);
-
-        if (! $result->isSuccessful()) {
-            $this->update([
-                'status' => FirewallRuleStatus::FAILED,
-            ]);
-            return;
-        }
-        $this->update([
-            'status' => FirewallRuleStatus::APPLIED,
-        ]);
-    }
-
-    public function remove(): void
-    {
-        $ssh = $this->server->sshClient();
-
-        $command = "ufw";
-
-        if ($this->type === 'allow') {
-            $command .= " delete allow";
-        } elseif ($this->type === 'deny') {
-            $command .= " delete deny";
-        }
-
-        if ($this->from) {
-            $command .= " from {$this->from}";
-            $command .= " to any port";
-        }
-
-        $command .= " {$this->ports}";
-
-        $result = $ssh->execute($command);
-
-        if (! $result->isSuccessful()) {
-            $this->update([
-                'status' => FirewallRuleStatus::FAILED,
-            ]);
-            return;
-        }
-        $this->update([
-            'status' => FirewallRuleStatus::REMOVED,
-        ]);
+        return $command;
     }
 }
