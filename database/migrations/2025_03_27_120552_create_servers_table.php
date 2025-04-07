@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('provider_status');
             $table->string('internal_ip');
             $table->integer('internal_ip_ending');
+            $table->text('internal_public_key')->nullable();
             $table->string('status');
             $table->string('region');
             $table->string('os');

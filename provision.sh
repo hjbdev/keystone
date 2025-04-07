@@ -100,7 +100,6 @@ ip link add dev wg0 type wireguard
 ip address add dev wg0 192.168.2.[!internal_ip_ending!]/24
 wg set wg0 listen-port 51820 private-key /root/.wg/privatekey
 ip link set up dev wg0
-# wg set wg0 peer <PEER_PUBLIC_KEY> allowed-ips 192.168.2.3/32 #<- this is the ip for the peer being added
 
 # Setup Keystone Home Directory Permissions
 chown -R keystone:keystone /home/keystone
@@ -167,6 +166,7 @@ APT::Periodic::AutocleanInterval "7";
 APT::Periodic::Unattended-Upgrade "1";
 EOF
 
+INTERNAL_PUBLIC_KEY="$(cat /root/.wg/publickey)"
 
 # Callback that the server is installed
-curl --insecure --data "server_id=[!server_id!]" [!callback!]
+curl --insecure --data "server_id=[!server_id!]&internal_public_key=$INTERNAL_PUBLIC_KEY" [!callback!]

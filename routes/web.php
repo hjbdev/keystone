@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Servers\SyncWireguardRules;
 use App\Enums\ServerStatus;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\EnvironmentController;
@@ -72,6 +73,7 @@ Route::get('/provision-script', function (Request $request) {
 Route::post('/provision-callback', function (Request $request) {
     $validated = $request->validate([
         'server_id' => ['required', 'integer', 'exists:servers,id'],
+        'internal_public_key' => ['required', 'string'],
     ]);
 
     $server = Server::find($validated['server_id']);
@@ -97,7 +99,12 @@ Route::post('/provision-callback', function (Request $request) {
 
     $server->update([
         'status' => ServerStatus::ACTIVE,
+        'internal_public_key' => $validated['internal_public_key'],
     ]);
+
+    $server->organisation->servers()->each(function ($s) {
+        app(SyncWireguardRules::class)->onQueue()->execute($s);
+    });
 
     return response('OK', 200);
 })->name('provision.callback');
