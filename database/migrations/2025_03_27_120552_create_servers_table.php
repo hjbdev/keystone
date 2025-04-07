@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('ipv6');
             $table->string('private_ip');
             $table->string('provider_status');
+            $table->string('internal_ip');
+            $table->integer('internal_ip_ending');
             $table->string('status');
             $table->string('region');
             $table->string('os');

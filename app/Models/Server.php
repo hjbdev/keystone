@@ -25,6 +25,22 @@ class Server extends Model
         ];
     }
 
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (self $server) {
+            // $server->internal_ip_ending = random_int(2, 254);
+            $existingServer = Server::whereOrganisationId($server->organisation_id)
+                ->orderByDesc('internal_ip_ending')
+                ->first();
+            
+            $server->internal_ip_ending = $existingServer
+                ? $existingServer->internal_ip_ending + 1
+                : 2;
+        });
+    }
+
     public function externalNetwork(): BelongsTo
     {
         return $this->belongsTo(Network::class, 'external_network_id');

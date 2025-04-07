@@ -51,6 +51,11 @@ if [ ! -d /root/.ssh ]; then
     touch /root/.ssh/authorized_keys
 fi
 
+# Create the wireguard directory
+if [ ! -d /root/.wg ]; then
+    mkdir -p /root/.wg
+fi
+
 # Set The Hostname If Necessary
 echo "[!hostname!]" > /etc/hostname sed -i 's/127\.0\.0\.1.*localhost/127.0.0.1 [!hostname!].localdomain [!hostname!] localhost/' /etc/hosts
 hostname [!hostname!]
@@ -59,6 +64,7 @@ hostname [!hostname!]
 useradd keystone
 mkdir -p /home/keystone/.ssh
 mkdir -p /home/keystone/.keystone
+mkdir -p /home/keystone/.wg
 adduser keystone sudo
 
 # Setup Bash For Keystone User
@@ -83,6 +89,18 @@ ssh-keygen -f /home/keystone/.ssh/id_ed25519 -t ed25519 -N ''
 
 # Restart SSH
 service ssh restart
+
+# Create the wireguard key pairs
+wg genkey > /root/.wg/privatekey
+wg pubkey < /root/.wg/privatekey > /root/.wg/publickey
+
+# Configure wireguard
+ip link add dev wg0 type wireguard
+ip address add dev wg0 192.168.2.1/24
+wg set wg0 listen-port 51820 private-key /root/.wg/privatekey
+ip link set up dev wg0
+
+# wg set wg0 peer <PEER_PUBLIC_KEY> allowed-ips <PEER_VPN_IP>/32
 
 # Setup Keystone Home Directory Permissions
 chown -R keystone:keystone /home/keystone
