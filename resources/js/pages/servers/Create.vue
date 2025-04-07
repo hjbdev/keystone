@@ -13,7 +13,7 @@ const props = defineProps({
 });
 
 const form = useForm({
-    provider: 'hetzner',
+    provider: null,
     location: null,
     server_type: null,
     image: null,
@@ -83,7 +83,7 @@ function loadServerTypes() {
                 <RadioButton
                     v-for="provider in providers"
                     v-model="form.provider"
-                    :value="provider.value"
+                    :value="provider.id"
                     :disabled="provider.disabled"
                     name="server-provider"
                 >
