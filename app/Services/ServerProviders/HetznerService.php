@@ -24,12 +24,13 @@ class HetznerService extends ServerProviderService
 
     public function __construct()
     {
-        $this->connector = new HetznerConnector();
+        $this->connector = new HetznerConnector;
     }
 
     public function forProvider(Provider $provider): static
     {
         $this->provider = $provider;
+
         return $this;
     }
 

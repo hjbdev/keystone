@@ -2,7 +2,6 @@
 
 namespace App\Http\Integrations\Connectors;
 
-use App\Models\Provider;
 use Saloon\Http\Connector;
 
 class HetznerConnector extends Connector
