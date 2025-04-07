@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Servers\SyncWireguardRules;
 use App\Enums\ServerStatus;
+use App\Events\Servers\ServerProvisioned;
 use App\Models\Server;
 use App\Support\Ip;
 use Illuminate\Http\Request;
@@ -46,6 +47,8 @@ class ProvisionCallback extends Controller
         $server->organisation->servers()->each(function ($s) {
             app(SyncWireguardRules::class)->onQueue()->execute($s);
         });
+
+        event(new ServerProvisioned($server));
 
         return response('OK', 200);
     }
