@@ -25,6 +25,8 @@ class ServerController extends Controller
 
     public function create(Request $request)
     {
+        $organisation = Organisation::findOrFail($request->route('organisation'));
+
         $locations = null;
         $serverTypes = null;
         $images = null;
@@ -47,6 +49,7 @@ class ServerController extends Controller
         }
 
         return inertia('servers/Create', [
+            'providers' => $organisation->providers,
             'locations' => $locations,
             'serverTypes' => $serverTypes,
             'images' => $images,

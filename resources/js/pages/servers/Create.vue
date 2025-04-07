@@ -6,6 +6,7 @@ import { Head, router, useForm } from '@inertiajs/vue3';
 import { watch } from 'vue';
 
 const props = defineProps({
+    providers: Array,
     locations: Array,
     serverTypes: Array,
     images: Array,
@@ -17,18 +18,6 @@ const form = useForm({
     server_type: null,
     image: null,
 });
-
-const serverProviders = [
-    {
-        name: 'Hetzner',
-        value: 'hetzner',
-    },
-    {
-        name: 'Digital Ocean',
-        value: 'digital-ocean',
-        disabled: true,
-    },
-];
 
 watch(
     () => form.provider,
@@ -92,13 +81,13 @@ function loadServerTypes() {
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="flex flex-wrap gap-2">
                 <RadioButton
-                    v-for="serverProvider in serverProviders"
+                    v-for="provider in providers"
                     v-model="form.provider"
-                    :value="serverProvider.value"
-                    :disabled="serverProvider.disabled"
+                    :value="provider.value"
+                    :disabled="provider.disabled"
                     name="server-provider"
                 >
-                    {{ serverProvider.name }}
+                    {{ provider.name }}
                 </RadioButton>
             </div>
             <div v-if="form.provider" class="flex flex-wrap gap-2">

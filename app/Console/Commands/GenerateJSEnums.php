@@ -51,7 +51,6 @@ class GenerateJSEnums extends Command
             }
 
             $js = "// This is a generated file. \n";
-            $js .= '// Published at '.now()->format('Y-m-d H:i:s')."\n";
             $js .= "\n";
             $js .= 'export default ';
             $js .= json_encode($enum::toArray(), JSON_PRETTY_PRINT)."\n";
