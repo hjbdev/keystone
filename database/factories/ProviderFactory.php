@@ -23,7 +23,7 @@ class ProviderFactory extends Factory
             'type' => $this->faker->randomElement([
                 ProviderType::HETZNER,
             ]),
-            'token' => $this->faker->uuid(),
+            'token' => env('HETZNER_KEY') ?? $this->faker->uuid(),
         ];
     }
 
