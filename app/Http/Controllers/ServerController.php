@@ -105,12 +105,14 @@ class ServerController extends Controller
             'external_id' => $createdServer->id,
             'ipv4' => $createdServer->ipv4,
             'ipv6' => $createdServer->ipv6,
+            'private_ip' => $createdServer->privateIp,
             'provider_status' => $createdServer->status,
             'status' => ServerStatus::WAITING_FOR_PROVIDER,
             'region' => $request->location,
             'os' => $request->image,
             'plan' => $request->server_type,
             'user' => 'keystone',
+            'external_network_id' => $network->id,
         ]);
 
         dispatch(new WaitForServerToConnect(

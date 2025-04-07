@@ -20,9 +20,17 @@ use Illuminate\Support\Collection;
 
 class HetznerService extends ServerProviderService
 {
-    public function __construct(Provider $provider)
+    protected Provider $provider;
+
+    public function __construct()
     {
-        $this->connector = new HetznerConnector($provider);
+        $this->connector = new HetznerConnector();
+    }
+
+    public function forProvider(Provider $provider): static
+    {
+        $this->provider = $provider;
+        return $this;
     }
 
     public function createServer(
@@ -54,6 +62,7 @@ class HetznerService extends ServerProviderService
             ipv4: $response->json('server.public_net.ipv4.ip'),
             ipv6: $response->json('server.public_net.ipv6.ip'),
             networkId: $networkId,
+            privateIp: $response->json('server.private_net.0.ip'),
         );
     }
 

@@ -11,6 +11,7 @@ class CreatedServer
         public string $status,
         public string $ipv4,
         public string $ipv6,
+        public string $privateIp,
         public string $networkId,
     ) {}
 }

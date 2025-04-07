@@ -37,7 +37,7 @@ class Provider extends Model
     public function service(): ?ServerProviderService
     {
         return match ($this->type) {
-            ProviderType::HETZNER => app(HetznerService::class, ['provider' => $this]),
+            ProviderType::HETZNER => app(HetznerService::class)->forProvider($this),
             default => null,
         };
     }

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\ProviderType;
+use App\Models\Organisation;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -26,10 +27,10 @@ class ProviderFactory extends Factory
         ];
     }
 
-    public function forOrganisation($organisationId): static
+    public function forOrganisation(string|Organisation $organisation): static
     {
         return $this->state(fn (array $attributes) => [
-            'organisation_id' => $organisationId,
+            'organisation_id' => is_string($organisation) ? $organisation : $organisation->id,
         ]);
     }
 }
