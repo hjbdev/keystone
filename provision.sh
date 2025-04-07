@@ -4,6 +4,7 @@
 # [server_id!] - the servers id
 # [keystonepublickey!] - keystone's public key
 # [callback!] - callback url
+# [internal_ip_ending!] - internal ip ending
 
 apt_wait() {
     while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do
@@ -96,11 +97,10 @@ wg pubkey < /root/.wg/privatekey > /root/.wg/publickey
 
 # Configure wireguard
 ip link add dev wg0 type wireguard
-ip address add dev wg0 192.168.2.1/24
+ip address add dev wg0 192.168.2.[!internal_ip_ending!]/24
 wg set wg0 listen-port 51820 private-key /root/.wg/privatekey
 ip link set up dev wg0
-
-# wg set wg0 peer <PEER_PUBLIC_KEY> allowed-ips <PEER_VPN_IP>/32
+# wg set wg0 peer <PEER_PUBLIC_KEY> allowed-ips 192.168.2.3/32 #<- this is the ip for the peer being added
 
 # Setup Keystone Home Directory Permissions
 chown -R keystone:keystone /home/keystone
