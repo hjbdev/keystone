@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\NetworkType;
 use App\Enums\OrganisationRole;
 use App\Enums\ProviderType;
 use App\Enums\RepositoryType;
@@ -19,8 +20,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         $user = User::factory()->create([
             'name' => 'Harry',
             'email' => 'harry@hjb.dev',
@@ -39,7 +38,16 @@ class DatabaseSeeder extends Seeder
             'token' => env('HETZNER_KEY'),
         ]);
 
+        $network = $organisation->networks()->create([
+            'type' => NetworkType::EXTERNAL,
+            'name' => 'keystone',
+            'external_id' => 'net-12345',
+            'provider_id' => $provider->id,
+            'ip_range' => fake()->ipv4() . '/24',
+        ]);
+
         $servers = Server::factory(40)
+            ->forNetwork($network->id)
             ->forOrganisation($organisation->id)
             ->forProvider($provider->id)
             ->create();

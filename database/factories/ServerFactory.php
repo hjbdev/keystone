@@ -31,6 +31,15 @@ class ServerFactory extends Factory
         ];
     }
 
+    public function forNetwork(string $networkId): static
+    {
+        return $this->state(function (array $attributes) use ($networkId) {
+            return [
+                'external_network_id' => $networkId,
+            ];
+        });
+    }
+
     public function forOrganisation(int $organisationId): static
     {
         return $this->state(function (array $attributes) use ($organisationId) {
