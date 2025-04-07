@@ -20,8 +20,6 @@ class ServerFactory extends Factory
     {
         return [
             'name' => $this->faker->word(),
-            'provider' => ServerProvider::HETZNER,
-            'provider_id' => $this->faker->uuid(),
             'ipv4' => $this->faker->ipv4(),
             'ipv6' => $this->faker->ipv6(),
             'provider_status' => '',
@@ -38,6 +36,15 @@ class ServerFactory extends Factory
         return $this->state(function (array $attributes) use ($organisationId) {
             return [
                 'organisation_id' => $organisationId,
+            ];
+        });
+    }
+
+    public function forProvider(string $providerId): static
+    {
+        return $this->state(function (array $attributes) use ($providerId) {
+            return [
+                'provider_id' => $providerId,
             ];
         });
     }

@@ -2,6 +2,7 @@
 
 use App\Models\Network;
 use App\Models\Organisation;
+use App\Models\Provider;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,9 +16,9 @@ return new class extends Migration
             $table->foreignIdFor(Organisation::class);
             $table->foreignIdFor(Network::class, 'external_network_id');
             $table->foreignIdFor(Network::class, 'internal_network_id');
+            $table->foreignIdFor(Provider::class);
+            $table->string('provider_external_id')->nullable();
             $table->string('name');
-            $table->string('provider');
-            $table->string('provider_id');
             $table->string('ipv4');
             $table->string('ipv6');
             $table->string('private_ip');

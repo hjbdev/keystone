@@ -16,7 +16,6 @@ class Network extends Model
     {
         return [
             'type' => NetworkType::class,
-            'provider' => ServerProvider::class,
         ];
     }
 
@@ -33,5 +32,10 @@ class Network extends Model
     public function organisation(): BelongsTo
     {
         return $this->belongsTo(Organisation::class);
+    }
+
+    public function provider(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class);
     }
 }

@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use App\Enums\Concerns\Arrayable;
 
-enum ServerProvider: string
+enum ProviderType: string
 {
     use Arrayable;
 

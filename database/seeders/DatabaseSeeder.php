@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\OrganisationRole;
+use App\Enums\ProviderType;
 use App\Enums\RepositoryType;
 use App\Models\Organisation;
 use App\Models\Server;
@@ -32,7 +33,16 @@ class DatabaseSeeder extends Seeder
             'owner_id' => 1,
         ]);
 
-        $servers = Server::factory(40)->forOrganisation($organisation->id)->create();
+        $provider = $organisation->providers()->create([
+            'name' => 'Hetzner',
+            'type' => ProviderType::HETZNER,
+            'token' => env('HETZNER_KEY'),
+        ]);
+
+        $servers = Server::factory(40)
+            ->forOrganisation($organisation->id)
+            ->forProvider($provider->id)
+            ->create();
 
         $organisation->servers()->saveMany($servers);
 

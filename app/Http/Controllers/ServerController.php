@@ -72,7 +72,7 @@ class ServerController extends Controller
 
         $server = $organisation->servers()->create([
             'name' => $createdServer->name,
-            'provider' => ServerProvider::tryFrom($request->provider),
+            // 'provider' => ServerProvider::tryFrom($request->provider), // @todo
             'provider_id' => $createdServer->id,
             'ipv4' => $createdServer->ipv4,
             'ipv6' => $createdServer->ipv6,

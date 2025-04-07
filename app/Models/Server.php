@@ -20,7 +20,6 @@ class Server extends Model
     protected function casts(): array
     {
         return [
-            'provider' => ServerProvider::class,
             'status' => ServerStatus::class,
         ];
     }
@@ -64,6 +63,11 @@ class Server extends Model
     public function firewallRules(): HasMany
     {
         return $this->hasMany(FirewallRule::class);
+    }
+
+    public function provider(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class);
     }
 
     public function sshClient(string $user = 'root'): Ssh
