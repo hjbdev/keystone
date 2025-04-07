@@ -31,10 +31,10 @@ class ProvisionCallback extends Controller
 
         if (! $isValidIp) {
             logger('someone tried to callback from an invalid IP');
-            logger(' server ip: ' . $server->ipv4);
-            logger(' server ipv6: ' . $server->ipv6);
-            logger(' callback ip: ' . $request->ip());
-            logger(' server id: ' . $server->id);
+            logger(' server ip: '.$server->ipv4);
+            logger(' server ipv6: '.$server->ipv6);
+            logger(' callback ip: '.$request->ip());
+            logger(' server id: '.$server->id);
 
             return response('Unauthorized', 401);
         }

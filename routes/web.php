@@ -1,7 +1,5 @@
 <?php
 
-use App\Actions\Servers\SyncWireguardRules;
-use App\Enums\ServerStatus;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\EnvironmentController;
 use App\Http\Controllers\OrganisationController;
@@ -9,11 +7,7 @@ use App\Http\Controllers\ProvisionCallback;
 use App\Http\Controllers\ProvisionScript;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\ServiceController;
-use App\Models\Server;
-use App\Support\Ip;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::inertia('/', 'Welcome')->name('home');
 

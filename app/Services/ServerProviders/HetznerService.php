@@ -5,11 +5,13 @@ namespace App\Services\ServerProviders;
 use App\Data\ServerProviders\CreatedServer;
 use App\Data\ServerProviders\Image;
 use App\Data\ServerProviders\Location;
+use App\Data\ServerProviders\Network;
 use App\Data\ServerProviders\ServerType;
 use App\Http\Integrations\Connectors\HetznerConnector;
 use App\Http\Integrations\Requests\Hetzner\Images\GetImagesRequest;
 use App\Http\Integrations\Requests\Hetzner\Locations\GetLocationsRequest;
 use App\Http\Integrations\Requests\Hetzner\Servers\CreateServerRequest;
+use App\Http\Integrations\Requests\Hetzner\Servers\GetNetworksRequest;
 use App\Http\Integrations\Requests\Hetzner\ServerTypes\GetServerTypesRequest;
 use App\Models\Provider;
 use Exception;
@@ -106,5 +108,28 @@ class HetznerService extends ServerProviderService
                 osVersion: $image['os_version'],
             );
         })->where('osVersion', '!=', 'unknown')->values();
+    }
+
+    public function findNetwork(string $name): ?Network
+    {
+        $response = $this->connector->send(new GetNetworksRequest(
+            name: $name,
+        ));
+
+        if ($response->status() !== 200) {
+            throw new Exception('Failed to fetch networks from Hetzner');
+        }
+
+        $network = collect($response->json('networks'))->where('name', $name)->first();
+
+        if ($network) {
+            return new Network(
+                id: $network['id'],
+                name: $network['name'],
+                ipRange: $network['ip_range'],
+            );
+        }
+
+        return null;
     }
 }

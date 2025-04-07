@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Actions\GenerateRandomSlug;
-use App\Actions\GetProviderService;
 use App\Enums\ServerStatus;
 use App\Jobs\Servers\WaitForServerToConnect;
 use App\Models\Organisation;

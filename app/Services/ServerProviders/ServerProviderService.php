@@ -3,6 +3,7 @@
 namespace App\Services\ServerProviders;
 
 use App\Data\ServerProviders\CreatedServer;
+use App\Data\ServerProviders\Network;
 use Illuminate\Support\Collection;
 use Saloon\Http\Connector;
 
@@ -22,4 +23,6 @@ abstract class ServerProviderService
     abstract public function getLocations(): Collection;
 
     abstract public function getImages(): Collection;
+
+    abstract public function findNetwork(string $name): ?Network;
 }
