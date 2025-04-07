@@ -30,7 +30,6 @@ class Server extends Model
         parent::boot();
 
         static::creating(function (self $server) {
-            // $server->internal_ip_ending = random_int(2, 254);
             $existingServer = Server::whereOrganisationId($server->organisation_id)
                 ->orderByDesc('internal_ip_ending')
                 ->first();
@@ -38,6 +37,7 @@ class Server extends Model
             $server->internal_ip_ending = $existingServer
                 ? $existingServer->internal_ip_ending + 1
                 : 2;
+            $server->internal_ip = config('keystone.internal_ip_base') . $server->internal_ip_ending;
         });
     }
 
