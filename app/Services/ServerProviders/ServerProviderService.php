@@ -16,6 +16,7 @@ abstract class ServerProviderService
         string $serverType,
         string $location,
         string $image,
+        string $networkId,
     ): CreatedServer;
 
     abstract public function getServerTypes(): Collection;
@@ -25,4 +26,6 @@ abstract class ServerProviderService
     abstract public function getImages(): Collection;
 
     abstract public function findNetwork(string $name): ?Network;
+
+    abstract public function createNetwork(string $name): Network;
 }

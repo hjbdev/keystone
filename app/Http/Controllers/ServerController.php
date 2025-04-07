@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\GenerateRandomSlug;
+use App\Enums\NetworkType;
 use App\Enums\ServerStatus;
 use App\Jobs\Servers\WaitForServerToConnect;
 use App\Models\Organisation;
@@ -57,7 +58,15 @@ class ServerController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'provider' => ['required', 'exists:providers,id'],
+            'server_type' => ['required', 'string'],
+            'location' => ['required', 'string'],
+            'image' => ['required', 'string'],
+        ]);
+
         $sudoPassword = Str::random(32);
+        /** @var Provider $provider */
         $provider = Provider::findOrFail($request->provider);
         $providerService = $provider->service();
 
@@ -65,11 +74,27 @@ class ServerController extends Controller
             return back()->with('error', 'Invalid provider');
         }
 
+        if (! $network = $provider->networks()->first()) {
+            // we need a keystone network to create this server
+            $createdNetwork = $providerService->createNetwork(
+                name: 'keystone',
+            );
+
+            $network = $provider->networks()->create([
+                'organisation_id' => $provider->organisation_id,
+                'external_id' => $createdNetwork->id,
+                'type' => NetworkType::EXTERNAL,
+                'name' => $createdNetwork->name,
+                'ip_range' => $createdNetwork->ipRange,
+            ]);
+        }
+
         $createdServer = $providerService->createServer(
             name: app(GenerateRandomSlug::class)->execute(), // @todo allow custom name
             serverType: $request->server_type,
             location: $request->location,
             image: $request->image,
+            networkId: $network->external_id,
         );
 
         $organisation = Organisation::findOrFail($request->route('organisation'));

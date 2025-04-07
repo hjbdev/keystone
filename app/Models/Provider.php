@@ -5,11 +5,15 @@ namespace App\Models;
 use App\Enums\ProviderType;
 use App\Services\ServerProviders\HetznerService;
 use App\Services\ServerProviders\ServerProviderService;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Provider extends Model
 {
+    /** @use HasFactory<\Database\Factories\ProviderFactory> */
+    use HasFactory;
+
     protected $guarded = [];
 
     protected function casts(): array
@@ -33,7 +37,7 @@ class Provider extends Model
     public function service(): ?ServerProviderService
     {
         return match ($this->type) {
-            ProviderType::HETZNER => new HetznerService($this),
+            ProviderType::HETZNER => app(HetznerService::class, ['provider' => $this]),
             default => null,
         };
     }

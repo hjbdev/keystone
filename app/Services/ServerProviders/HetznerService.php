@@ -10,8 +10,9 @@ use App\Data\ServerProviders\ServerType;
 use App\Http\Integrations\Connectors\HetznerConnector;
 use App\Http\Integrations\Requests\Hetzner\Images\GetImagesRequest;
 use App\Http\Integrations\Requests\Hetzner\Locations\GetLocationsRequest;
+use App\Http\Integrations\Requests\Hetzner\Networks\CreateNetworkRequest;
+use App\Http\Integrations\Requests\Hetzner\Networks\GetNetworksRequest;
 use App\Http\Integrations\Requests\Hetzner\Servers\CreateServerRequest;
-use App\Http\Integrations\Requests\Hetzner\Servers\GetNetworksRequest;
 use App\Http\Integrations\Requests\Hetzner\ServerTypes\GetServerTypesRequest;
 use App\Models\Provider;
 use Exception;
@@ -29,12 +30,16 @@ class HetznerService extends ServerProviderService
         string $serverType,
         string $location,
         string $image,
+        string $networkId,
     ): CreatedServer {
         $response = $this->connector->send(new CreateServerRequest(
             image: $image,
             name: $name,
             serverType: $serverType,
             location: $location,
+            networks: [
+                $networkId,
+            ],
         ));
 
         if ($response->status() !== 201) {
@@ -48,6 +53,7 @@ class HetznerService extends ServerProviderService
             status: $response->json('server.status'),
             ipv4: $response->json('server.public_net.ipv4.ip'),
             ipv6: $response->json('server.public_net.ipv6.ip'),
+            networkId: $networkId,
         );
     }
 
@@ -131,5 +137,22 @@ class HetznerService extends ServerProviderService
         }
 
         return null;
+    }
+
+    public function createNetwork(string $name): Network
+    {
+        $response = $this->connector->send(new CreateNetworkRequest(
+            name: $name,
+        ));
+
+        if ($response->status() !== 201) {
+            throw new Exception('Failed to create network on Hetzner');
+        }
+
+        return new Network(
+            id: $response->json('network.id'),
+            name: $response->json('network.name'),
+            ipRange: $response->json('network.ip_range'),
+        );
     }
 }

@@ -21,6 +21,7 @@ class ServerFactory extends Factory
             'name' => $this->faker->word(),
             'ipv4' => $this->faker->ipv4(),
             'ipv6' => $this->faker->ipv6(),
+            'private_ip' => $this->faker->ipv4(),
             'provider_status' => '',
             'status' => $this->faker->randomElement(ServerStatus::toArray()),
             'region' => '28',

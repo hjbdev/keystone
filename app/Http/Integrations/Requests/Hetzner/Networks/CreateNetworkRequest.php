@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Integrations\Requests\Hetzner\Servers;
+namespace App\Http\Integrations\Requests\Hetzner\Networks;
 
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
