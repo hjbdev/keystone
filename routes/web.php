@@ -32,7 +32,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::resource('applications', ApplicationController::class)
-            ->only('show')
+            ->only('show', 'index')
+            ->name('index', 'applications.index')
             ->name('show', 'applications.show');
 
         Route::prefix('applications/{application}')->group(function () {
