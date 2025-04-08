@@ -1,7 +1,7 @@
 // This is a generated file. 
 
 export default {
-    "UNINSTALLED": "uninstalled",
+    "NOT_INSTALLED": "not-installed",
     "INSTALLED": "installed",
     "FAILED": "failed",
     "REMOVED": "removed"
