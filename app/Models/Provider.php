@@ -15,6 +15,7 @@ class Provider extends Model
     use HasFactory;
 
     protected $guarded = [];
+
     protected $hidden = ['token'];
 
     protected function casts(): array

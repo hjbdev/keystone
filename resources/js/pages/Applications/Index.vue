@@ -35,7 +35,7 @@ const props = defineProps({
             </div>
         </div>
         <div class="grid gap-4 rounded-xl p-4 md:grid-cols-2 lg:grid-cols-3">
-            <Card v-for="application in applications.data" :key="`application{$applications.id}`" class="relative w-full">
+            <Card v-for="application in applications" :key="`application{$applications.id}`" class="relative w-full">
                 <CardHeader>
                     <CardTitle>{{ application.name }}</CardTitle>
                 </CardHeader>

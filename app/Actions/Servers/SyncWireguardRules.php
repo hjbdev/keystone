@@ -27,11 +27,16 @@ class SyncWireguardRules
         $output = $result->getOutput();
         $commands = collect();
 
-        $server->organisation->servers()->where('id', '!=', $server->id)->each(function ($organisationServer) use (&$commands, $output) {
+        $server->organisation->servers()->where('id', '!=', $server->id)->each(function ($organisationServer) use (&$commands, $output, $server) {
             if (Str::contains($output, $organisationServer->internal_public_key)) {
                 $commands->push("wg set wg0 peer {$organisationServer->internal_public_key} remove");
             }
-            $commands->push("wg set wg0 peer {$organisationServer->internal_public_key} allowed-ips {$organisationServer->internal_ip}/32");
+
+            if ($organisationServer->external_network_id === $server->external_network_id) {
+                $commands->push("wg set wg0 peer {$organisationServer->internal_public_key} allowed-ips {$organisationServer->internal_ip}/32");
+            } else {
+                $commands->push("wg set wg0 peer {$organisationServer->internal_public_key} allowed-ips {$organisationServer->ipv4}/32,{$organisationServer->ipv6}/128");
+            }
         });
 
         $result = $ssh->execute($commands->toArray());

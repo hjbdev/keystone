@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'keystone',
             'external_id' => 'net-12345',
             'provider_id' => $provider->id,
-            'ip_range' => fake()->ipv4() . '/24',
+            'ip_range' => fake()->ipv4().'/24',
         ]);
 
         $servers = Server::factory(40)
