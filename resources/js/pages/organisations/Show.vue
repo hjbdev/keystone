@@ -82,7 +82,7 @@ defineProps({
                         <template #fallback> Loading... </template>
                         <h3 class="mt-4 text-2xl font-bold tracking-tight">Server Providers</h3>
                         <p class="mb-4 text-sm text-muted-foreground">Manage your server providers.</p>
-                        <div class="border-muted-background divide-y-muted-background divide-y rounded-md border">
+                        <div class="border-muted-background divide-y-muted-background divide-y rounded-md border max-w-80">
                             <div v-for="provider in providers" class="flex items-center gap-2 px-2 py-1">
                                 {{ provider.name }}
                                 <span class="ml-auto text-xs uppercase text-muted-foreground">{{ provider.type }}</span>

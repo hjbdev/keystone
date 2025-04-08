@@ -18,7 +18,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
+import { AppWindowIcon, BookOpen, Folder, LayoutGrid, Menu, Search, ServerIcon } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
@@ -39,24 +39,41 @@ const activeItemStyles = computed(
 );
 
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
+    // {
+    //     title: 'Dashboard',
+    //     href: new URL(route('dashboard')).pathname,
+    //     icon: LayoutGrid,
+    // },
 ];
 
+if (page.props.organisation) {
+    mainNavItems.push({
+        title: 'Applications',
+        href: new URL(route('applications.index', {
+            organisation: page.props?.organisation?.id
+        })).pathname,
+        icon: AppWindowIcon,
+    });
+    mainNavItems.push({
+        title: 'Servers',
+        href: new URL(route('servers.index', {
+            organisation: page.props?.organisation?.id
+        })).pathname,
+        icon: ServerIcon,
+    })
+}
+
 const rightNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits',
-        icon: BookOpen,
-    },
+    // {
+    //     title: 'Repository',
+    //     href: 'https://github.com/laravel/vue-starter-kit',
+    //     icon: Folder,
+    // },
+    // {
+    //     title: 'Documentation',
+    //     href: 'https://laravel.com/docs/starter-kits',
+    //     icon: BookOpen,
+    // },
 ];
 </script>
 
