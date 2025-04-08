@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, WhenVisible } from '@inertiajs/vue3';
 import { AppWindowIcon, ServerIcon, UserIcon } from 'lucide-vue-next';
+import { ref, watch } from 'vue';
 
 defineProps({
     organisation: {
@@ -12,8 +13,18 @@ defineProps({
     },
     providers: {
         type: Array,
-        required: true,
+        required: false,
     },
+});
+
+const tabValue = ref(new URL(window.location.href).hash?.replace('#', '') || 'dashboard');
+watch(tabValue, () => {
+    window.history.pushState({}, '', `#${tabValue.value}`);
+});
+watch(() => window.location.hash, (newHash) => {
+    if (newHash) {
+        tabValue.value = newHash.replace('#', '');
+    }
 });
 </script>
 
@@ -23,7 +34,7 @@ defineProps({
     <AppLayout>
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <h2 class="text-3xl font-bold tracking-tight">{{ organisation.name }}</h2>
-            <Tabs default-value="dashboard" :unmount-on-hide="false">
+            <Tabs v-model="tabValue" :unmount-on-hide="false">
                 <TabsList>
                     <TabsTrigger value="dashboard"> Dashboard </TabsTrigger>
                     <TabsTrigger value="settings"> Settings </TabsTrigger>

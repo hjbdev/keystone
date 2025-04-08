@@ -18,7 +18,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { AppWindowIcon, BookOpen, Folder, LayoutGrid, Menu, Search, ServerIcon } from 'lucide-vue-next';
+import { AppWindowIcon, BoltIcon, Menu, Search, ServerIcon } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
@@ -47,6 +47,13 @@ const mainNavItems: NavItem[] = [
 ];
 
 if (page.props.organisation) {
+    mainNavItems.push({
+        title: page.props.organisation.name,
+        href: new URL(route('organisations.show', {
+            organisation: page.props?.organisation?.id
+        })).pathname,
+        icon: BoltIcon,
+    });
     mainNavItems.push({
         title: 'Applications',
         href: new URL(route('applications.index', {
