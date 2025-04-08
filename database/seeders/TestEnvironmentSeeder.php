@@ -6,9 +6,10 @@ use App\Enums\OrganisationRole;
 use App\Enums\ProviderType;
 use App\Models\Organisation;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
-class TestEnvironmentSeeder
+class TestEnvironmentSeeder extends Seeder
 {
     public function run(): void
     {
