@@ -8,6 +8,7 @@ import ServiceCategory, { DescriptionMap as serviceCategoryDescriptions } from '
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { AppWindowIcon, ArchiveIcon, DatabaseIcon, DatabaseZapIcon, DoorOpenIcon } from 'lucide-vue-next';
+import { watch } from 'vue';
 
 const props = defineProps({
     services: Object,
@@ -36,6 +37,28 @@ function getIcon(category) {
             return null;
     }
 }
+
+function generateServiceName() {
+    let str = '';
+
+    if (form.category) {
+        str += form.category.toLowerCase() + '-';
+    }
+
+    if (form.service) {
+        str += form.service.toLowerCase() + '-';
+    }
+
+    if (form.version) {
+        str += form.version.toLowerCase();
+    }
+
+    return str;
+}
+
+watch([() => form.category, () => form.service, () => form.version], () => {
+    form.name = generateServiceName();
+});
 </script>
 
 <template>
@@ -88,9 +111,9 @@ function getIcon(category) {
 
             <div v-if="form.service" class="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
                 <RadioButton
-                    v-for="version in services[form.category][form.service].versions"
+                    v-for="(version, versionKey) in services[form.category][form.service].versions"
                     v-model="form.version"
-                    :value="version.name"
+                    :value="versionKey"
                     name="version"
                     class="py-3"
                 >
