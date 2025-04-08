@@ -32,6 +32,8 @@ class DatabaseSeeder extends Seeder
             'owner_id' => 1,
         ]);
 
+        $organisation->members()->attach($user, ['role' => OrganisationRole::ADMIN]);
+
         $provider = $organisation->providers()->create([
             'name' => 'Hetzner',
             'type' => ProviderType::HETZNER,
@@ -53,8 +55,6 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         $organisation->servers()->saveMany($servers);
-
-        $organisation->members()->attach($user, ['role' => OrganisationRole::ADMIN]);
 
         $application = $organisation->applications()->create([
             'name' => 'ClipBin',
