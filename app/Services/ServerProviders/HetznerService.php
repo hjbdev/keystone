@@ -30,6 +30,9 @@ class HetznerService extends ServerProviderService
     public function forProvider(Provider $provider): static
     {
         $this->provider = $provider;
+        $this->connector = $this->connector->withTokenAuth(
+            $provider->token,
+        );
 
         return $this;
     }
