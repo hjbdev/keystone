@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('type'); // postgres / redis / caddy
             $table->string('version'); // 17 / 7 / 2
             $table->string('driver_name');
+            $table->text('credentials')->nullable();
             $table->string('container_name')->nullable();
             $table->string('container_id')->nullable();
             $table->timestamps();

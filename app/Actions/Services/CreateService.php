@@ -28,10 +28,11 @@ class CreateService
             'status' => ServiceStatus::NOT_INSTALLED,
         ]);
 
-        $defaultPassword = Str::random(16);
+        $service->credentials = $service->driver()->defaultCredentials();
+        $service->save();
 
-        dispatch(new DeployService($service, $defaultPassword));
+        dispatch(new DeployService($service));
 
-        return ['defaultPassword' => $defaultPassword, 'service' => $service];
+        return $service;
     }
 }

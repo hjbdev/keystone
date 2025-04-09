@@ -15,12 +15,15 @@ class Service extends Model
 {
     protected $guarded = [];
 
+    protected $hidden = ['credentials', 'container_name', 'container_id'];
+
     protected function casts(): array
     {
         return [
             'status' => ServiceStatus::class,
             'category' => ServiceCategory::class,
             'type' => ServiceType::class,
+            'credentials' => 'encrypted:array',
         ];
     }
 
@@ -39,14 +42,12 @@ class Service extends Model
         return $this->morphMany(Deployment::class, 'target');
     }
 
-    public function driver(
-        ?string $defaultPassword = null,
-    ): Driver {
+    public function driver(): Driver {
         $class = config("keystone.drivers.{$this->driver_name}");
         if (! class_exists($class)) {
             throw new \Exception("Driver class {$class} not found");
         }
 
-        return new $class($this->container_name, $this->container_id, defaultPassword: $defaultPassword);
+        return new $class($this->container_name, $this->container_id, credentials: $this->credentials);
     }
 }

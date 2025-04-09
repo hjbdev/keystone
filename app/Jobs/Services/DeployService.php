@@ -17,14 +17,13 @@ class DeployService implements ShouldQueue
 
     public function __construct(
         public Service $service,
-        public ?string $defaultPassword = null,
     ) {
         //
     }
 
     public function handle(): void
     {
-        $driver = $this->service->driver($this->defaultPassword);
+        $driver = $this->service->driver();
         $this->service->update([
             'status' => ServiceStatus::INSTALLING,
         ]);
@@ -37,7 +36,7 @@ class DeployService implements ShouldQueue
                 'status' => DeploymentStatus::PENDING,
                 'script' => $plannedStep->getSafeScript(),
                 'secrets' => [
-                    'defaultPassword' => $this->defaultPassword,
+                    'password' => $this->service->credentials['password'],
                 ],
             ]);
             if ($index === 0) {

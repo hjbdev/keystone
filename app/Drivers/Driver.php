@@ -16,4 +16,6 @@ abstract class Driver
         ?string $containerName = null,
         ?string $containerId = null,
     );
+
+    abstract public function defaultCredentials(): array;
 }
