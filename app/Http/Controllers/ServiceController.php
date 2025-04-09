@@ -36,7 +36,7 @@ class ServiceController extends Controller
 
         $server = Server::findOrFail($request->route('server'));
 
-        $response = app(CreateService::class)->execute(
+        $service = app(CreateService::class)->execute(
             server: $server,
             name: $request->name,
             category: $request->enum('category', ServiceCategory::class),
@@ -44,12 +44,11 @@ class ServiceController extends Controller
             version: $request->version,
         );
 
-        $service = $response['service'];
-        $defaultPassword = $response['defaultPassword'];
-
-        return redirect()->route('servers.show', $server)->with([
+        return redirect()->route('servers.show', [
+            'organisation' => $server->organisation->id,
+            'server' => $server->id,
+        ])->with([
             'success' => 'Service created successfully',
-            'defaultPassword' => $defaultPassword,
             'service' => $service,
         ]);
     }

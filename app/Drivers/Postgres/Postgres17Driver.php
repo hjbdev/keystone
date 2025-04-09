@@ -16,9 +16,10 @@ class Postgres17Driver extends DatabaseDriver
         public ?string $containerId = null,
         public ?array $credentials = null,
     ) {
-        $user = $credentials['user'];
-        $password = $credentials['password'];
-        $db = $credentials['db'];
+        $credentials = $credentials ?? $this->defaultCredentials();
+        $user = $credentials['user'] ?? null;
+        $password = $credentials['password'] ?? null;
+        $db = $credentials['db'] ?? null;
 
         $this->deploymentPlan = new Plan(steps: [
             new Step(
