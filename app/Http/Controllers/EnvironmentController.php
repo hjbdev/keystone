@@ -12,7 +12,7 @@ class EnvironmentController extends Controller
         $id = $request->route('environment');
 
         return inertia('environments/Show', [
-            'environment' => Environment::findOrFail($id),
+            'environment' => Environment::with('application')->findOrFail($id),
         ]);
     }
 }

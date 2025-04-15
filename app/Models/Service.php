@@ -6,6 +6,7 @@ use App\Drivers\Driver;
 use App\Enums\ServiceCategory;
 use App\Enums\ServiceStatus;
 use App\Enums\ServiceType;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,6 +26,13 @@ class Service extends Model
             'type' => ServiceType::class,
             'credentials' => 'encrypted:array',
         ];
+    }
+
+    public function folderName(): Attribute
+    {
+        return new Attribute(
+            get: fn () => $this->name . '-' . $this->id,
+        );
     }
 
     public function server(): BelongsTo

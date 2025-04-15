@@ -20,10 +20,13 @@ defineProps<{
                     <template v-if="index === breadcrumbs.length - 1">
                         <BreadcrumbPage>{{ item.title }}</BreadcrumbPage>
                     </template>
-                    <template v-else>
+                    <template v-else-if="item.href">
                         <BreadcrumbLink as-child>
                             <Link :href="item.href ?? '#'">{{ item.title }}</Link>
                         </BreadcrumbLink>
+                    </template>
+                    <template v-else>
+                        <span>{{ item.title }}</span>
                     </template>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator v-if="index !== breadcrumbs.length - 1" />
