@@ -5,7 +5,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { PlusIcon } from 'lucide-vue-next';
 
-const props = defineProps({
+defineProps({
     environment: {
         type: Object,
         required: true,
