@@ -31,7 +31,7 @@ class Service extends Model
     public function folderName(): Attribute
     {
         return new Attribute(
-            get: fn () => $this->name . '-' . $this->id,
+            get: fn() => $this->name . '-' . $this->id,
         );
     }
 
@@ -50,12 +50,18 @@ class Service extends Model
         return $this->morphMany(Deployment::class, 'target');
     }
 
-    public function driver(): Driver {
+    public function driver(): Driver
+    {
         $class = config("keystone.drivers.{$this->driver_name}");
         if (! class_exists($class)) {
             throw new \Exception("Driver class {$class} not found");
         }
 
-        return new $class($this->container_name, $this->container_id, credentials: $this->credentials);
+        return new $class(
+            containerName: $this->container_name,
+            containerId: $this->container_id,
+            serviceId: $this->id,
+            credentials: $this->credentials
+        );
     }
 }

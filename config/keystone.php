@@ -1,5 +1,6 @@
 <?php
 
+use App\Drivers\Caddy\Caddy2Driver;
 use App\Drivers\Postgres\Postgres17Driver;
 use App\Enums\ServiceCategory;
 use App\Enums\ServiceType;
@@ -9,6 +10,9 @@ return [
         'postgres' => [
             '17' => Postgres17Driver::class,
         ],
+        'caddy' => [
+            '2' => Caddy2Driver::class,
+        ]
     ],
     'internal_ip_base' => env('INTERNAL_IP_BASE', '192.168.2.'),
 
@@ -53,10 +57,10 @@ return [
                 'name' => ServiceType::CADDY,
                 'description' => 'Caddy',
                 'versions' => [
-                    '2.9' => [
-                        'name' => 'Caddy 2.9',
-                        'description' => 'Caddy 2.9',
-                        'image' => 'caddy:2.9'
+                    '2' => [
+                        'name' => 'Caddy 2',
+                        'description' => 'Caddy 2',
+                        'image' => 'caddy:2'
                     ],
                 ],
             ],

@@ -5,6 +5,7 @@ namespace App\Drivers\Postgres;
 use App\Data\Deployments\Plan;
 use App\Data\Deployments\PlannedStep as Step;
 use App\Drivers\DatabaseDriver;
+use App\Models\Service;
 use Illuminate\Support\Str;
 
 class Postgres17Driver extends DatabaseDriver
@@ -14,6 +15,7 @@ class Postgres17Driver extends DatabaseDriver
     public function __construct(
         public ?string $containerName = null,
         public ?string $containerId = null,
+        public ?Service $service = null,
         public ?array $credentials = null,
     ) {
         $credentials = $credentials ?? $this->defaultCredentials();
@@ -48,8 +50,9 @@ class Postgres17Driver extends DatabaseDriver
                     if ($db) {
                         $runCommand .= " -e POSTGRES_DB={$db}";
                     }
-
                     $runCommand .= ' -p 5432:5432 postgres:17';
+
+                    $script->push($runCommand);
 
                     return $runCommand;
                 }

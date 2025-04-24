@@ -2,15 +2,10 @@
 
 namespace App\Drivers;
 
-use App\Data\Deployments\Plan;
 use App\Models\Service;
 
-abstract class Driver
+abstract class GatewayDriver extends Driver
 {
-    public ?Service $service;
-
-    public Plan $deploymentPlan;
-
     public ?string $containerName;
 
     public ?string $containerId;
@@ -18,6 +13,6 @@ abstract class Driver
     abstract public function __construct(
         ?string $containerName = null,
         ?string $containerId = null,
-        ?int $service = null,
+        ?Service $service = null,
     );
 }
