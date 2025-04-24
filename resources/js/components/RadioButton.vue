@@ -15,7 +15,7 @@ function onChange(event) {
 
 <template>
     <label
-        class="relative rounded-lg border-2 border-white/20 px-3 py-1 has-[:checked]:border-white has-[:disabled]:opacity-40"
+        class="relative rounded-lg border-2 dark:border-white/20 px-3 py-1 dark:has-[:checked]:border-white border-black/20 has-[:checked]:border-black has-[:disabled]:opacity-40"
     >
         <input
             type="radio"

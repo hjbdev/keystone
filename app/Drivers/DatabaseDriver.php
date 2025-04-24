@@ -15,4 +15,8 @@ abstract class DatabaseDriver extends Driver
         ?string $containerId = null,
         ?array $credentials = null,
     );
+
+    abstract public function createUser(string $user, string $password): string;
+
+    // abstract public function createDatabase(string $db, string $user): string;
 }

@@ -8,7 +8,7 @@ import { useCycleList, useInterval } from '@vueuse/core';
 import { DatabaseIcon, Layers2Icon, LoaderCircleIcon, PlusIcon } from 'lucide-vue-next';
 import { watch } from 'vue';
 
-const props = defineProps({
+defineProps({
     server: {
         type: Object,
         required: true,

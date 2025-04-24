@@ -16,7 +16,13 @@ class EnvironmentController extends Controller
         return inertia('environments/Show', [
             'environment' => $environment,
             'servers' => inertia()->optional(function () use ($environment) {
-                return $environment->application?->organisation?->servers->where('status', ServerStatus::ACTIVE)?->values() ?? [];
+                return $environment
+                    ->application
+                    ?->organisation
+                    ?->servers()
+                    ->where('status', ServerStatus::ACTIVE)
+                    ->with('services')
+                    ->get() ?? [];
             }),
         ]);
     }

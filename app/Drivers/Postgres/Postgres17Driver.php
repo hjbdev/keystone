@@ -55,7 +55,7 @@ class Postgres17Driver extends DatabaseDriver
                 }
             ),
             new Step(
-                name: 'Configure firewall',
+                name: 'Configure firewall', // @todo this should create a Firewallrule
                 script: 'ufw allow 5432/tcp || true',
             ),
         ]);
@@ -68,5 +68,10 @@ class Postgres17Driver extends DatabaseDriver
             'user' => 'keystone',
             'db' => 'keystone',
         ];
+    }
+
+    public function createUser(string $user, string $password): string
+    {
+        return "psql -U {$this->credentials['user']} -d {$this->credentials['db']} -c \"CREATE USER {$user} WITH PASSWORD '{$password}';\"";
     }
 }

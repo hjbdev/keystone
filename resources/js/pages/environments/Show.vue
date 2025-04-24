@@ -1,8 +1,9 @@
-<script setup lang="ts">
+<script setup>
 import ServerSelector from '@/components/ServerSelector.vue';
 import { Card } from '@/components/ui/card';
+import ServiceCategory from '@/enums/ServiceCategory';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import { PlusIcon } from 'lucide-vue-next';
 
 defineProps({
@@ -15,6 +16,20 @@ defineProps({
         required: false,
     }
 });
+
+function selectServer(server, serviceCategory = null) {
+    if (serviceCategory) {
+        if (server.services?.find((s) => s.category === serviceCategory)) {
+            // service is installed
+            return;
+        } else {
+            router.visit(route('servers.show', {
+                organisation: usePage().props.organisation.id,
+                server: server.id,
+            }));
+        }
+    }
+}
 </script>
 
 <template>
@@ -35,6 +50,10 @@ defineProps({
             },
             {
                 title: 'Environments',
+                href: route('applications.show', {
+                    organisation: $page.props.organisation.id,
+                    application: environment.application.id,
+                }),
             },
             {
                 title: environment.name,
@@ -49,7 +68,7 @@ defineProps({
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <Card class="pattern-graph-paper grid grid-cols-3 gap-6 p-6">
                 <div class="space-y-2">
-                    <ServerSelector :servers="servers">
+                    <ServerSelector :servers="servers" :service-category="ServiceCategory.GATEWAY" @select="selectServer($event, ServiceCategory.GATEWAY)">
                         <template #trigger>
                             <Card class="group flex select-none items-center gap-2 bg-card/30 p-4 text-sm backdrop-blur-sm">
                                 <PlusIcon class="size-4 opacity-50" />
