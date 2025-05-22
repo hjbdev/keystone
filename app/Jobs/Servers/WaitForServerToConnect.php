@@ -30,7 +30,7 @@ class WaitForServerToConnect implements ShouldBeEncrypted, ShouldQueue
         $process = Ssh::create('root', $this->server->ipv4 ?? $this->server->ipv6)
             ->usePassword($this->rootPassword)
             ->disableStrictHostKeyChecking()
-            ->setTimeout(10)
+            ->setTimeout(5)
             ->execute('echo "Connected"');
 
         if (! $process->isSuccessful()) {
