@@ -56,6 +56,11 @@ class HetznerService extends ServerProviderService
         ));
 
         if ($response->status() !== 201) {
+            Log::error('Failed to create server on Hetzner', [
+                'response' => $response->json(),
+                'status' => $response->status(),
+                'name' => $name,
+            ]);
             throw new Exception('Failed to create server on Hetzner');
         }
 
