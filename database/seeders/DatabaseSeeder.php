@@ -40,21 +40,23 @@ class DatabaseSeeder extends Seeder
             'token' => env('HETZNER_KEY'),
         ]);
 
-        $network = $organisation->networks()->create([
-            'type' => NetworkType::EXTERNAL,
-            'name' => 'keystone',
-            'external_id' => 'net-12345',
-            'provider_id' => $provider->id,
-            'ip_range' => fake()->ipv4().'/24',
-        ]);
+        if (! app()->isProduction()) {
+            $network = $organisation->networks()->create([
+                'type' => NetworkType::EXTERNAL,
+                'name' => 'keystone',
+                'external_id' => 'net-12345',
+                'provider_id' => $provider->id,
+                'ip_range' => fake()->ipv4() . '/24',
+            ]);
 
-        $servers = Server::factory(40)
-            ->forNetwork($network->id)
-            ->forOrganisation($organisation->id)
-            ->forProvider($provider->id)
-            ->create();
+            $servers = Server::factory(40)
+                ->forNetwork($network->id)
+                ->forOrganisation($organisation->id)
+                ->forProvider($provider->id)
+                ->create();
 
-        $organisation->servers()->saveMany($servers);
+            $organisation->servers()->saveMany($servers);
+        }
 
         $application = $organisation->applications()->create([
             'name' => 'ClipBin',
