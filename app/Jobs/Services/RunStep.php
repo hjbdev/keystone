@@ -31,6 +31,9 @@ class RunStep implements ShouldQueue
 
         $ssh = $server->sshClient()
             ->onOutput(function ($type, $output) {
+                if (trim($output) === '') {
+                    return;
+                }
                 if ($type === Process::OUT) {
                     $this->step->update([
                         'logs' => $this->step->logs . "\n" . trim($output),

@@ -109,10 +109,10 @@ watch(counter, () => {
                                             {{ step.name ?? 'Unnamed Step' }}
                                         </div>
                                         <div v-if="step.error_logs">
-                                            {{ step.error_logs }}
+                                            <pre class="text-xs">{{ step.error_logs }}</pre>
                                         </div>
                                         <div v-else>
-                                            {{ step.logs }}
+                                            <pre class="text-xs">{{ step.logs }}</pre> 
                                         </div>
                                     </div>
                                 </div>
