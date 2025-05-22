@@ -36,9 +36,7 @@ class DeployService implements ShouldQueue
                 'order' => $index + 1,
                 'status' => DeploymentStatus::PENDING,
                 'script' => $plannedStep->getSafeScript(),
-                'secrets' => [
-                    'password' => $this->service->credentials['password'],
-                ],
+                'secrets' => $this->service->credentials,
             ]);
             if ($index === 0) {
                 $step->dispatchJob();
