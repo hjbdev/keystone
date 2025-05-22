@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Drivers\DatabaseDriver;
 use App\Drivers\Driver;
 use App\Enums\ServiceCategory;
 use App\Enums\ServiceStatus;
@@ -57,11 +58,16 @@ class Service extends Model
             throw new \Exception("Driver class {$class} not found");
         }
 
-        return new $class(
+        $driver = new $class(
             containerName: $this->container_name,
             containerId: $this->container_id,
-            serviceId: $this->id,
-            credentials: $this->credentials
+            service: $this,
         );
+
+        if ($driver instanceof DatabaseDriver) {
+            $driver->credentials = $this->credentials;
+        }
+
+        return $driver;
     }
 }

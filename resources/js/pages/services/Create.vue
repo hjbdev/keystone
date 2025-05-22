@@ -17,7 +17,7 @@ const props = defineProps({
 const form = useForm({
     name: null,
     category: null,
-    service: null,
+    type: null,
     version: null,
 });
 
@@ -45,8 +45,8 @@ function generateServiceName() {
         str += form.category.toLowerCase() + '-';
     }
 
-    if (form.service) {
-        str += form.service.toLowerCase() + '-';
+    if (form.type) {
+        str += form.type.toLowerCase() + '-';
     }
 
     if (form.version) {
@@ -56,7 +56,7 @@ function generateServiceName() {
     return str;
 }
 
-watch([() => form.category, () => form.service, () => form.version], () => {
+watch([() => form.category, () => form.type, () => form.version], () => {
     form.name = generateServiceName();
 });
 </script>
@@ -98,20 +98,14 @@ watch([() => form.category, () => form.service, () => form.version], () => {
             </div>
 
             <div v-if="form.category" class="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
-                <RadioButton
-                    v-for="service in services[form.category]"
-                    v-model="form.service"
-                    :value="service.name"
-                    name="service"
-                    class="py-3"
-                >
+                <RadioButton v-for="service in services[form.category]" v-model="form.type" :value="service.name" name="type" class="py-3">
                     <h4 class="mb-1 text-lg font-semibold leading-none tracking-tighter">{{ service.name }}</h4>
                 </RadioButton>
             </div>
 
-            <div v-if="form.service" class="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+            <div v-if="form.type" class="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
                 <RadioButton
-                    v-for="(version, versionKey) in services[form.category][form.service].versions"
+                    v-for="(version, versionKey) in services[form.category][form.type].versions"
                     v-model="form.version"
                     :value="versionKey"
                     name="version"
@@ -128,7 +122,9 @@ watch([() => form.category, () => form.service, () => form.version], () => {
             </div>
 
             <div class="flex items-center justify-end">
-                <Button @click="form.post(route('services.store', { organisation: $page.props.organisation.id, server: $page.props.server.id }))">Submit</Button>
+                <Button @click="form.post(route('services.store', { organisation: $page.props.organisation.id, server: $page.props.server.id }))"
+                    >Submit</Button
+                >
             </div>
         </div>
     </AppLayout>

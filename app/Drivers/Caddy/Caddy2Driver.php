@@ -31,6 +31,7 @@ class Caddy2Driver extends GatewayDriver
                     $script->push('cd services');
                     $script->push("test -d {$this->service->id} || mkdir {$this->service->id}");
                     $script->push("cd {$this->service->id}");
+                    return $script->join("\n");
                 }
             ),
             new Step(
@@ -49,7 +50,9 @@ class Caddy2Driver extends GatewayDriver
                     }
                     $runCommand .= ' -p 80:80 -p 443:443 caddy:2';
 
-                    return $runCommand;
+                    $script->push($runCommand);
+
+                    return $script->join("\n");
                 }
             ),
         ]);

@@ -18,6 +18,6 @@ abstract class Driver
     abstract public function __construct(
         ?string $containerName = null,
         ?string $containerId = null,
-        ?int $service = null,
+        ?Service $service = null,
     );
 }

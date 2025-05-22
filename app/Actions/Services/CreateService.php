@@ -27,8 +27,10 @@ class CreateService
             'status' => ServiceStatus::NOT_INSTALLED,
         ]);
 
-        $service->credentials = $service->driver()->defaultCredentials();
-        $service->save();
+        if (method_exists($service->driver(), 'defaultCredentials')) {
+            $service->credentials = $service->driver()->defaultCredentials();
+            $service->save();
+        }
 
         dispatch(new DeployService($service));
 
