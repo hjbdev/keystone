@@ -7,6 +7,7 @@ use App\Enums\ServiceStatus;
 use App\Models\Step;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Symfony\Component\Process\Process;
 
 class RunStep implements ShouldQueue
 {
@@ -29,10 +30,16 @@ class RunStep implements ShouldQueue
         $server = $this->step->deployment->target->server;
 
         $ssh = $server->sshClient()
-            ->onOutput(function ($output) {
-                $this->step->update([
-                    'logs' => $this->step->logs."\n".trim($output),
-                ]);
+            ->onOutput(function ($type, $output) {
+                if ($type === Process::OUT) {
+                    $this->step->update([
+                        'logs' => $this->step->logs . "\n" . trim($output),
+                    ]);
+                } else {
+                    $this->step->update([
+                        'error_logs' => $this->step->error_logs . "\n" . trim($output),
+                    ]);
+                }
             });
 
         $result = $ssh->execute($this->step->script);
@@ -41,7 +48,7 @@ class RunStep implements ShouldQueue
             $this->step->update([
                 'status' => DeploymentStatus::FAILED,
                 'finished_at' => now(),
-                'logs' => $this->step->logs."\n".trim($result->getErrorOutput()),
+                'error_logs' => $this->step->error_logs . "\n" . trim($result->getErrorOutput()),
             ]);
 
             return;
@@ -72,7 +79,7 @@ class RunStep implements ShouldQueue
         $this->step->update([
             'status' => DeploymentStatus::FAILED,
             'finished_at' => now(),
-            'logs' => $this->step->logs."\n".trim($exception->getMessage()),
+            'error_logs' => $this->step->error_logs . "\n" . trim($exception->getMessage()),
         ]);
 
         $this->step->deployment->steps()->where('order', '>', $this->step->order)->update([

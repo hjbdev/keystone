@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('status');
             $table->longText('script');
             $table->longText('logs')->nullable();
+            $table->longText('error_logs')->nullable();
             $table->text('secrets')->nullable();
             $table->dateTime('started_at')->nullable();
             $table->dateTime('finished_at')->nullable();

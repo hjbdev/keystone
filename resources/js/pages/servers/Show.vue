@@ -103,9 +103,17 @@ watch(counter, () => {
                         <CardContent class="py-4">
                             <div v-for="deployment in server.service_deployments" class="flex gap-4">
                                 <div class="w-48">{{ deployment.target.name }}</div>
-                                <div>
+                                <div class="space-y-4">
                                     <div v-for="step in deployment.steps">
-                                        {{ step }}
+                                        <div class="font-semibold">
+                                            {{ step.name ?? 'Unnamed Step' }}
+                                        </div>
+                                        <div v-if="step.error_logs">
+                                            {{ step.error_logs }}
+                                        </div>
+                                        <div v-else>
+                                            {{ step.logs }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
