@@ -21,6 +21,7 @@ class CreateNetworkRequest extends Request implements HasBody
     {
         return [
             'name' => $this->name,
+            'ip_range' => '10.0.0.0/16',
         ];
     }
 
