@@ -146,6 +146,8 @@ apt-get update
 apt_wait
 apt-get -y install docker-ce docker-ce-cli containerd.io
 apt_wait
+# Add keystone user to the docker group
+usermod -aG docker keystone
 # end docker install
 
 # Setup Unattended Security Upgrades
