@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Spatie\Ssh\Ssh;
 
 class Server extends Model
@@ -35,7 +36,7 @@ class Server extends Model
             $server->internal_ip_ending = $existingServer
                 ? $existingServer->internal_ip_ending + 1
                 : 2;
-            $server->internal_ip = config('keystone.internal_ip_base').$server->internal_ip_ending;
+            $server->internal_ip = config('keystone.internal_ip_base') . $server->internal_ip_ending;
         });
     }
 
@@ -67,6 +68,26 @@ class Server extends Model
     public function provider(): BelongsTo
     {
         return $this->belongsTo(Provider::class);
+    }
+
+    public function serviceDeployments(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Deployment::class,
+            Service::class,
+            'server_id',
+            'target_id',
+        )->where('target_type', (new Service)->getMorphClass());
+    }
+
+    public function environmentDeployments(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Deployment::class,
+            Environment::class,
+            'server_id',
+            'target_id',
+        )->where('target_type', (new Environment)->getMorphClass());
     }
 
     public function sshClient(string $user = 'root'): Ssh
