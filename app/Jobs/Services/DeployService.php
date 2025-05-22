@@ -33,6 +33,7 @@ class DeployService implements ShouldQueue
         $deploymentPlan = $driver->getDeploymentPlan($this->deployment->hash);
         foreach ($deploymentPlan->steps as $index => $plannedStep) {
             $step = $this->deployment->steps()->create([
+                'name' => $plannedStep->name,
                 'order' => $index + 1,
                 'status' => DeploymentStatus::PENDING,
                 'script' => $plannedStep->getSafeScript(),

@@ -12,6 +12,7 @@ return new class extends Migration
         Schema::create('steps', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Deployment::class);
+            $table->string('name');
             $table->integer('order');
             $table->string('status');
             $table->longText('script');

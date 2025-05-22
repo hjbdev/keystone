@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardDescription, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { useCycleList, useInterval } from '@vueuse/core';
@@ -64,10 +64,16 @@ watch(counter, () => {
                     <div class="mb-3 flex items-center justify-between">
                         <h3 class="text-2xl font-semibold tracking-tight">Services</h3>
                         <div>
-                            <Button :as="Link" :href="route('services.create', {
-                                organisation: $page.props.organisation.id,
-                                server: server.id,
-                            })" size="xs">
+                            <Button
+                                :as="Link"
+                                :href="
+                                    route('services.create', {
+                                        organisation: $page.props.organisation.id,
+                                        server: server.id,
+                                    })
+                                "
+                                size="xs"
+                            >
                                 <PlusIcon class="size-4" />
                                 Add
                             </Button>
@@ -90,6 +96,21 @@ watch(counter, () => {
                             </CardHeader>
                         </Card>
                     </div>
+                </div>
+                <div>
+                    <h3 class="mb-3 text-2xl font-semibold tracking-tight">Deployments</h3>
+                    <Card>
+                        <CardContent class="py-4">
+                            <div v-for="deployment in server.service_deployments" class="flex gap-4">
+                                <div class="w-48">{{ deployment.target.name }}</div>
+                                <div>
+                                    <div v-for="step in deployment.steps">
+                                        {{ step }}
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
             </template>
             <template v-else-if="server.status === 'provisioning'">
