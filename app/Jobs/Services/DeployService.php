@@ -24,13 +24,13 @@ class DeployService implements ShouldQueue
     public function handle(): void
     {
         $driver = $this->service->driver();
-        $deploymentPlan = $driver->getDeploymentPlan($this->deployment->hash);
         $this->service->update([
             'status' => ServiceStatus::INSTALLING,
         ]);
         $this->deployment = $this->service->deployments()->create([
             'status' => DeploymentStatus::PENDING,
         ]);
+        $deploymentPlan = $driver->getDeploymentPlan($this->deployment->hash);
         foreach ($deploymentPlan->steps as $index => $plannedStep) {
             $step = $this->deployment->steps()->create([
                 'order' => $index + 1,
