@@ -5,6 +5,7 @@ namespace App\Drivers\Postgres;
 use App\Data\Deployments\Plan;
 use App\Data\Deployments\PlannedStep as Step;
 use App\Drivers\DatabaseDriver;
+use App\Enums\DeploymentStatus;
 use App\Models\Service;
 use Illuminate\Support\Str;
 
@@ -19,27 +20,40 @@ class Postgres17Driver extends DatabaseDriver
         public ?array $credentials = null,
     ) {
         $credentials = $credentials ?? $this->defaultCredentials();
+    }
+
+    public function getDeploymentPlan(string $deploymentHash): Plan
+    {
         $user = $credentials['user'] ?? null;
         $password = $credentials['password'] ?? null;
         $db = $credentials['db'] ?? null;
 
-        $this->deploymentPlan = new Plan(steps: [
+        if (!$user || !$password || !$db) {
+            throw new \InvalidArgumentException('Missing required credentials');
+        }
+
+        $previousDeployment = $this->service?->deployments()
+            ->where('status', DeploymentStatus::COMPLETED)
+            ->first();
+
+        return new Plan(steps: [
             new Step(
                 name: 'Run the docker image',
                 secrets: [
                     'password' => $password
                 ],
-                script: function () use ($user, $password, $db) {
+                script: function () use ($user, $password, $db, $previousDeployment, $deploymentHash) {
                     $script = collect();
-                    if ($this->containerName) {
-                        $script->push('docker stop '.$this->containerName.' || true');
+
+                    if ($this->containerName && $previousDeployment) {
+                        $script->push("docker stop \"{$this->containerName}-{$previousDeployment->hash}\" || true");
                     } elseif ($this->containerId) {
-                        $script->push('docker stop '.$this->containerId.' || true');
+                        $script->push('docker stop ' . $this->containerId . ' || true');
                     }
 
                     $runCommand = 'docker run -d';
                     if ($this->containerName) {
-                        $runCommand .= " --name {$this->containerName}";
+                        $runCommand .= " --name \"{$this->containerName}-{$deploymentHash}\"";
                     }
                     if ($password) {
                         $runCommand .= ' -e POSTGRES_PASSWORD=[!password!]';
@@ -54,7 +68,7 @@ class Postgres17Driver extends DatabaseDriver
 
                     $script->push($runCommand);
 
-                    return $runCommand;
+                    return $script->join(" && ");
                 }
             ),
             new Step(

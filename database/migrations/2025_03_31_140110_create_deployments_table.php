@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('deployments', function (Blueprint $table) {
             $table->id();
+            $table->string('hash')->unique();
             $table->morphs('target'); // server, service, etc.
             $table->string('status');
             $table->dateTime('started_at')->nullable();

@@ -9,8 +9,6 @@ abstract class Driver
 {
     public ?Service $service;
 
-    public Plan $deploymentPlan;
-
     public ?string $containerName;
 
     public ?string $containerId;
@@ -20,4 +18,6 @@ abstract class Driver
         ?string $containerId = null,
         ?Service $service = null,
     );
+
+    abstract public function getDeploymentPlan(string $deploymentHash): Plan;
 }

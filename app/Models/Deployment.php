@@ -10,6 +10,15 @@ class Deployment extends Model
 {
     protected $guarded = [];
 
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (self $deployment) {
+            $deployment->hash = str()->random(16);
+        });
+    }
+
     protected function casts(): array
     {
         return [

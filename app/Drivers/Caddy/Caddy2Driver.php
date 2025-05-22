@@ -5,6 +5,7 @@ namespace App\Drivers\Caddy;
 use App\Drivers\GatewayDriver;
 use App\Data\Deployments\Plan;
 use App\Data\Deployments\PlannedStep as Step;
+use App\Enums\DeploymentStatus;
 use App\Models\Service;
 
 class Caddy2Driver extends GatewayDriver
@@ -20,8 +21,15 @@ class Caddy2Driver extends GatewayDriver
         $this->containerName = $containerName;
         $this->containerId = $containerId;
         $this->service = $service;
+    }
 
-        $this->deploymentPlan = new Plan(steps: [
+    public function getDeploymentPlan(string $deploymentHash): Plan
+    {
+        $previousDeployment = $this->service?->deployments()
+            ->where('status', DeploymentStatus::COMPLETED)
+            ->first();
+
+        return new Plan(steps: [
             new Step(
                 name: 'Generate Caddyfile',
                 script: function () {
@@ -36,23 +44,23 @@ class Caddy2Driver extends GatewayDriver
             ),
             new Step(
                 name: 'Run the docker image',
-                script: function () {
+                script: function () use ($previousDeployment, $deploymentHash) {
                     $script = collect();
-                    if ($this->containerName) {
-                        $script->push('docker stop '.$this->containerName.' || true');
+                    if ($this->containerName && $previousDeployment) {
+                        $script->push("docker stop \"{$this->containerName}-{$previousDeployment->hash}\" || true");
                     } elseif ($this->containerId) {
-                        $script->push('docker stop '.$this->containerId.' || true');
+                        $script->push('docker stop ' . $this->containerId . ' || true');
                     }
 
                     $runCommand = 'docker run -d';
                     if ($this->containerName) {
-                        $runCommand .= " --name {$this->containerName}";
+                        $runCommand .= " --name \"{$this->containerName}-{$deploymentHash}\"";
                     }
                     $runCommand .= ' -p 80:80 -p 443:443 caddy:2';
 
                     $script->push($runCommand);
 
-                    return $script->join("\n");
+                    return $script->join(" && ");
                 }
             ),
         ]);
