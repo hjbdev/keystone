@@ -17,6 +17,7 @@ use App\Http\Integrations\Requests\Hetzner\ServerTypes\GetServerTypesRequest;
 use App\Models\Provider;
 use Exception;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class HetznerService extends ServerProviderService
 {
@@ -159,6 +160,11 @@ class HetznerService extends ServerProviderService
         ));
 
         if ($response->status() !== 201) {
+            Log::error('Failed to create network on Hetzner', [
+                'response' => $response->json(),
+                'status' => $response->status(),
+                'name' => $name,
+            ]);
             throw new Exception('Failed to create network on Hetzner');
         }
 
