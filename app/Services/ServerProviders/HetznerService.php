@@ -111,6 +111,7 @@ class HetznerService extends ServerProviderService
                 name: $location['name'],
                 country: $location['country'],
                 city: $location['city'],
+                networkZone: $location['network_zone'] ?? null,
             );
         })->values();
     }
@@ -135,7 +136,7 @@ class HetznerService extends ServerProviderService
         })->where('osVersion', '!=', 'unknown')->values();
     }
 
-    public function findNetwork(string $name): ?Network
+    public function findNetwork(string $name, ?string $networkZone = null): ?Network
     {
         $response = $this->connector->send(new GetNetworksRequest(
             name: $name,
@@ -152,16 +153,18 @@ class HetznerService extends ServerProviderService
                 id: $network['id'],
                 name: $network['name'],
                 ipRange: $network['ip_range'],
+                networkZone: $networkZone ?? 'global',
             );
         }
 
         return null;
     }
 
-    public function createNetwork(string $name): Network
+    public function createNetwork(string $name, ?string $networkZone = null): Network
     {
         $response = $this->connector->send(new CreateNetworkRequest(
             name: $name,
+            networkZone: $networkZone,
         ));
 
         if ($response->status() !== 201) {
@@ -169,6 +172,7 @@ class HetznerService extends ServerProviderService
                 'response' => $response->json(),
                 'status' => $response->status(),
                 'name' => $name,
+                'networkZone' => $networkZone,
             ]);
             throw new Exception('Failed to create network on Hetzner');
         }
@@ -177,6 +181,7 @@ class HetznerService extends ServerProviderService
             id: $response->json('network.id'),
             name: $response->json('network.name'),
             ipRange: $response->json('network.ip_range'),
+            networkZone: $response->json('network.network_zone') ?? $networkZone ?? 'global',
         );
     }
 }

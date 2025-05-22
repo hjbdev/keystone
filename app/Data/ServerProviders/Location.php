@@ -9,5 +9,6 @@ class Location
         public string $name,
         public string $country,
         public string $city,
+        public ?string $networkZone = null,
     ) {}
 }

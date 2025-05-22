@@ -15,23 +15,26 @@ const props = defineProps({
 const form = useForm({
     provider: null,
     location: null,
+    network_zone: null,
     server_type: null,
     image: null,
 });
 
 watch(
     () => form.provider,
-    (provider) => {
+    () => {
         loadLocations();
     },
 );
 
-watch (
+watch(
     () => form.location,
     (location) => {
+        const selectedLoc = props.locations.find((loc) => loc.id === location)?.networkZone;
+        form.network_zone = selectedLoc;
         loadServerTypes();
-    }
-)
+    },
+);
 
 loadLocations();
 loadServerTypes();
@@ -75,7 +78,7 @@ function loadServerTypes() {
             },
             {
                 title: 'Create',
-            }
+            },
         ]"
     >
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">

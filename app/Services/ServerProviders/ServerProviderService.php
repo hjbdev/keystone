@@ -28,7 +28,7 @@ abstract class ServerProviderService
 
     abstract public function getImages(): Collection;
 
-    abstract public function findNetwork(string $name): ?Network;
+    abstract public function findNetwork(string $name, ?string $networkZone = null): ?Network;
 
-    abstract public function createNetwork(string $name): Network;
+    abstract public function createNetwork(string $name, ?string $networkZone = null): Network;
 }

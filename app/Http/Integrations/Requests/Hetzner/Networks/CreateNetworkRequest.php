@@ -15,14 +15,27 @@ class CreateNetworkRequest extends Request implements HasBody
 
     public function __construct(
         protected ?string $name = null,
+        protected ?string $networkZone = null,
     ) {}
 
     protected function defaultBody(): array
     {
-        return [
+        $body = [
             'name' => $this->name,
             'ip_range' => '10.0.0.0/16',
         ];
+        
+        if ($this->networkZone) {
+            $body['subnets'] = [
+                [
+                    'type' => 'cloud',
+                    'ip_range' => '10.0.1.0/24',
+                    'network_zone' => $this->networkZone
+                ]
+            ];
+        }
+        
+        return $body;
     }
 
     public function resolveEndpoint(): string

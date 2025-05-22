@@ -63,6 +63,7 @@ class ServerController extends Controller
             'server_type' => ['required', 'string'],
             'location' => ['required', 'string'],
             'image' => ['required', 'string'],
+            'network_zone' => ['nullable', 'string'],
         ]);
 
         $sudoPassword = Str::random(32);
@@ -74,10 +75,19 @@ class ServerController extends Controller
             return back()->with('error', 'Invalid provider');
         }
 
-        if (! $network = $provider->networks()->first()) {
-            // we need a keystone network to create this server
+        $networkZone = $request->network_zone ?? 'global';
+        
+        // Look for an existing network with the same network_zone
+        $network = $provider->networks()
+            ->where('network_zone', $networkZone)
+            ->first();
+            
+        if (! $network) {
+            // We need to create a network with the correct network zone
+            $networkName = "keystone-{$networkZone}";
             $createdNetwork = $providerService->createNetwork(
-                name: 'keystone',
+                name: $networkName,
+                networkZone: $networkZone
             );
 
             $network = $provider->networks()->create([
@@ -86,6 +96,7 @@ class ServerController extends Controller
                 'type' => NetworkType::EXTERNAL,
                 'name' => $createdNetwork->name,
                 'ip_range' => $createdNetwork->ipRange,
+                'network_zone' => $networkZone,
             ]);
         }
 

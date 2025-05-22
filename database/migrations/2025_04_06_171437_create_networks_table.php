@@ -15,6 +15,7 @@ return new class extends Migration
             $table->foreignIdFor(Organisation::class);
             $table->foreignIdFor(Provider::class);
             $table->string('external_id')->nullable();
+            $table->string('network_zone')->default('global');
             $table->string('type');
             $table->string('name');
             $table->string('ip_range');

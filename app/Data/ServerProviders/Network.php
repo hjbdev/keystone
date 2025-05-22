@@ -8,5 +8,6 @@ class Network
         public string $id,
         public string $name,
         public string $ipRange,
+        public ?string $networkZone = 'global',
     ) {}
 }
