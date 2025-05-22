@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardDescription, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { useCycleList, useInterval } from '@vueuse/core';
 import { DatabaseIcon, Layers2Icon, LoaderCircleIcon, PlusIcon } from 'lucide-vue-next';
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
 
 defineProps({
     server: {
@@ -14,6 +15,8 @@ defineProps({
         required: true,
     },
 });
+
+const selectedStep = ref(null);
 
 const { state: provisionMessage, next } = useCycleList([
     'Provisioning your server...',
@@ -102,17 +105,37 @@ watch(counter, () => {
                     <Card>
                         <CardContent class="py-4">
                             <div v-for="deployment in server.service_deployments" class="flex gap-4">
-                                <div class="w-48">{{ deployment.target.name }}</div>
-                                <div class="space-y-4">
-                                    <div v-for="step in deployment.steps">
-                                        <div class="font-semibold">
-                                            {{ step.name ?? 'Unnamed Step' }}
+                                <div class="w-48 leading-none">{{ deployment.target.name }}</div>
+                                <div class="w-full space-y-4">
+                                    <div v-for="step in deployment.steps" class="flex items-center space-y-1">
+                                        <div class="flex-1">
+                                            <div class="text-sm font-semibold leading-none">
+                                                {{ step.name ?? 'Unnamed Step' }}
+                                            </div>
+                                            <div v-if="step.error_logs">
+                                                <pre class="text-xs text-muted-foreground"
+                                                    >{{ step.error_logs_excerpt.length !== step.error_logs ? '... ' : ''
+                                                    }}{{ step.error_logs_excerpt }}</pre
+                                                >
+                                            </div>
+                                            <div v-else-if="step.logs">
+                                                <pre class="text-xs text-muted-foreground"
+                                                    >{{ step.logs_excerpt.length !== step.logs ? '... ' : '' }}{{ step.logs_excerpt }}</pre
+                                                >
+                                            </div>
                                         </div>
-                                        <div v-if="step.error_logs">
-                                            <pre class="text-xs">{{ step.error_logs }}</pre>
-                                        </div>
-                                        <div v-else>
-                                            <pre class="text-xs">{{ step.logs }}</pre> 
+                                        <div>
+                                            <Button
+                                                size="xs"
+                                                variant="link"
+                                                @click="
+                                                    () => {
+                                                        selectedStep = step;
+                                                    }
+                                                "
+                                            >
+                                                View
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
@@ -148,6 +171,22 @@ watch(counter, () => {
                     {{ $page.props.flash.server_credentials }}
                 </div>
             </div>
+
+            <Dialog :open="!!selectedStep" @update:open="($event) => (!$event ? (selectedStep = null) : null)">
+                <DialogContent class="md:max-w-2xl">
+                    <DialogHeader>
+                        <DialogTitle>Logs for {{ selectedStep?.name }}</DialogTitle>
+                    </DialogHeader>
+                    <section v-if="selectedStep?.logs">
+                        <h3 class="text-sm font-medium">Logs</h3>
+                        <pre class="text-xs text-muted-foreground">{{ selectedStep?.logs }}</pre>
+                    </section>
+                    <section v-if="selectedStep?.error_logs">
+                        <h3 class="text-sm font-medium">Error Logs</h3>
+                        <pre class="max-w-full overflow-x-scroll text-xs text-muted-foreground">{{ selectedStep?.error_logs }}</pre>
+                    </section>
+                </DialogContent>
+            </Dialog>
 
             <!-- {{ server }} -->
         </div>
